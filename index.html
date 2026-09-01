@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/brand/irisflow-symbol.png" />
+    <meta name="theme-color" content="#1b54a8" />
+    <!-- Tema aplicado antes da pintura: evita o lampejo de tema claro
+         quando o usuario ja escolheu (ou o sistema pede) o modo escuro.
+         Escolha manual em localStorage manda; senao, segue o sistema. -->
+    <script>
+      ;(function () {
+        try {
+          var saved = localStorage.getItem('irisflow:theme')
+          var dark = saved
+            ? saved === 'dark'
+            : matchMedia('(prefers-color-scheme: dark)').matches
+          var theme = dark ? 'dark' : 'light'
+          document.documentElement.dataset.theme = theme
+          var meta = document.querySelector('meta[name="theme-color"]')
+          if (meta) meta.setAttribute('content', dark ? '#061223' : '#1b54a8')
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
+    <title>IrisFlow — seu olhar tem voz</title>
+    <meta
+      name="description"
+      content="A IrisFlow transforma o movimento dos olhos em comunicacao e em controle do computador usando apenas a webcam que voce ja tem. Tecnologia assistiva por rastreamento ocular, sem hardware proprietario."
+    />
+    <meta property="og:title" content="IrisFlow — seu olhar tem voz" />
+    <meta
+      property="og:description"
+      content="Comunicacao e controle do computador pelo olhar, com a webcam que voce ja tem. Periodo de avaliacao gratuito, sem fidelidade."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:image" content="/brand/irisflow-logo.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

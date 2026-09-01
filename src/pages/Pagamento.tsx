@@ -1,0 +1,357 @@
+import { useState, type FormEvent } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { AmbientBackground } from '@/components/effects/AmbientBackground'
+import { Reveal } from '@/components/effects/Reveal'
+import { Field, SelectField } from '@/components/ui/Field'
+import { Button } from '@/components/ui/Button'
+import { useAccount, type Payment } from '@/context/AccountContext'
+import {
+  brl,
+  cardBrand,
+  formatDate,
+  isCardNumber,
+  isExpiryValid,
+  last4,
+  maskCVV,
+  maskCard,
+  maskExpiry,
+} from '@/utils/format'
+import { fakeDelay } from '@/services/api'
+import { PLAN } from '@/data/content'
+import './checkout.css'
+
+type Method = Payment['method']
+
+const METHODS: { id: Method; icon: string; name: string; note: string }[] = [
+  { id: 'cartao', icon: '▭', name: 'Cartao de credito', note: 'Renovacao automatica' },
+  { id: 'pix', icon: '◈', name: 'Pix', note: 'Cobranca mensal avulsa' },
+  { id: 'boleto', icon: '≡', name: 'Boleto', note: 'Vencimento em 3 dias uteis' },
+]
+
+type CardForm = { number: string; holder: string; expiry: string; cvv: string; installments: number }
+type Errors = Partial<Record<keyof CardForm, string>>
+
+export default function Pagamento() {
+  const { account, attachPayment } = useAccount()
+  const navigate = useNavigate()
+  const [method, setMethod] = useState<Method>('cartao')
+  const [card, setCard] = useState<CardForm>({
+    number: '',
+    holder: '',
+    expiry: '',
+    cvv: '',
+    installments: 1,
+  })
+  const [errors, setErrors] = useState<Errors>({})
+  const [processing, setProcessing] = useState(false)
+
+  if (!account) return <Navigate to="/cadastro" replace />
+
+  const set =
+    (key: keyof CardForm, mask?: (v: string) => string) =>
+    (e: { target: { value: string } }) => {
+      const value = mask ? mask(e.target.value) : e.target.value
+      setCard((c) => ({ ...c, [key]: value }))
+      setErrors((prev) => ({ ...prev, [key]: undefined }))
+    }
+
+  const validate = () => {
+    if (method !== 'cartao') return true
+    const next: Errors = {}
+    if (!isCardNumber(card.number)) next.number = 'Numero de cartao invalido.'
+    if (card.holder.trim().split(' ').length < 2) next.holder = 'Informe o nome como esta no cartao.'
+    if (!isExpiryValid(card.expiry)) next.expiry = 'Validade invalida ou vencida.'
+    if (card.cvv.length < 3) next.cvv = 'Codigo de seguranca incompleto.'
+    setErrors(next)
+    return Object.keys(next).length === 0
+  }
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!validate()) return
+    setProcessing(true)
+
+    // Sem gateway: nada e cobrado e nenhum dado de cartao sai desta tela.
+    // Na integracao real, tokenize o cartao no navegador com o SDK do
+    // gateway (tokenizeCard em src/services/api.ts) e envie so o token.
+    await fakeDelay(1500)
+
+    const payment: Payment =
+      method === 'cartao'
+        ? {
+            method,
+            cardLast4: last4(card.number),
+            cardBrand: cardBrand(card.number),
+            holder: card.holder,
+            installments: card.installments,
+          }
+        : { method }
+
+    attachPayment(payment)
+    setProcessing(false)
+    navigate('/sucesso')
+  }
+
+  const brand = cardBrand(card.number)
+
+  return (
+    <div className="flow">
+      <AmbientBackground particles={14} scan={false} light />
+
+      <div className="container container--narrow flow__inner">
+        <Reveal anim="fade">
+          <span className="eyebrow">Forma de pagamento</span>
+        </Reveal>
+
+        <Reveal anim="up">
+          <h1 className="flow__title">Escolha como pagar depois da avaliacao.</h1>
+        </Reveal>
+
+        <Reveal anim="up" delay={120}>
+          <p className="lead flow__lead">
+            Nada e cobrado hoje. A primeira cobranca de {brl(PLAN.price)} acontece em{' '}
+            <strong>{formatDate(account.trialEndsAt)}</strong>, e voce pode cancelar antes disso
+            pelo painel, sem multa.
+          </p>
+        </Reveal>
+
+        <Reveal anim="up" delay={200}>
+          <div className="flow__card panel">
+            <div className="notice">
+              <span className="notice__icon" aria-hidden="true">
+                ⓘ
+              </span>
+              <p>
+                <strong>Ambiente de demonstracao.</strong> Este projeto foi entregue sem gateway de
+                pagamento e sem banco de dados: nenhum dado digitado aqui e enviado para lugar
+                nenhum e nenhuma cobranca e feita. Use um numero de cartao de teste, como{' '}
+                <code>4111 1111 1111 1111</code>.
+              </p>
+            </div>
+
+            <form onSubmit={submit} noValidate>
+              <div
+                className="methods"
+                role="radiogroup"
+                aria-label="Escolha a forma de pagamento"
+              >
+                {METHODS.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={method === m.id}
+                    className={`method${method === m.id ? ' is-on' : ''}`}
+                    onClick={() => setMethod(m.id)}
+                  >
+                    <span className="method__icon" aria-hidden="true">
+                      {m.icon}
+                    </span>
+                    <span className="method__name">{m.name}</span>
+                    <span className="method__note">{m.note}</span>
+                  </button>
+                ))}
+              </div>
+
+              {method === 'cartao' && (
+                <div className="flow__fieldset" key="cartao">
+                  {/* pre-visualizacao do cartao, atualizada enquanto se digita */}
+                  <div className="creditcard" aria-hidden="true">
+                    <div className="creditcard__row">
+                      <span className="creditcard__chip" />
+                      <span className="creditcard__brand">{card.number ? brand : 'IrisFlow'}</span>
+                    </div>
+                    <p className="creditcard__number">
+                      {card.number || '•••• •••• •••• ••••'}
+                    </p>
+                    <div className="creditcard__meta">
+                      <span>
+                        titular
+                        <strong>{card.holder || 'NOME NO CARTAO'}</strong>
+                      </span>
+                      <span>
+                        validade
+                        <strong>{card.expiry || 'MM/AA'}</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  <Field
+                    label="Numero do cartao"
+                    value={card.number}
+                    onChange={set('number', maskCard)}
+                    error={errors.number}
+                    inputMode="numeric"
+                    autoComplete="cc-number"
+                    placeholder="0000 0000 0000 0000"
+                  />
+
+                  <Field
+                    label="Nome impresso no cartao"
+                    value={card.holder}
+                    onChange={set('holder')}
+                    error={errors.holder}
+                    autoComplete="cc-name"
+                    placeholder="MARIA A SOUZA"
+                    style={{ textTransform: 'uppercase' }}
+                  />
+
+                  <div className="flow__row">
+                    <Field
+                      label="Validade"
+                      value={card.expiry}
+                      onChange={set('expiry', maskExpiry)}
+                      error={errors.expiry}
+                      inputMode="numeric"
+                      autoComplete="cc-exp"
+                      placeholder="MM/AA"
+                    />
+                    <Field
+                      label="Codigo de seguranca"
+                      value={card.cvv}
+                      onChange={set('cvv', maskCVV)}
+                      error={errors.cvv}
+                      inputMode="numeric"
+                      autoComplete="cc-csc"
+                      placeholder="000"
+                      hint="Tres digitos no verso do cartao."
+                    />
+                  </div>
+
+                  <SelectField
+                    label="Cobranca"
+                    value={String(card.installments)}
+                    onChange={(e) =>
+                      setCard((c) => ({ ...c, installments: Number(e.target.value) }))
+                    }
+                    hint="A assinatura e mensal e renova automaticamente ate o cancelamento."
+                  >
+                    <option value="1">Mensal — {brl(PLAN.price)} por mes</option>
+                    <option value="12">
+                      Anual — {brl(PLAN.price * 10)} a vista, equivalente a 2 meses de desconto
+                    </option>
+                  </SelectField>
+                </div>
+              )}
+
+              {method === 'pix' && (
+                <div className="flow__fieldset" key="pix">
+                  <div className="pix">
+                    <PixPlaceholder />
+                    <p style={{ margin: 0, maxWidth: '46ch' }}>
+                      No fim da avaliacao voce recebe por e-mail um Pix de {brl(PLAN.price)} com
+                      vencimento em tres dias. O acesso continua ativo enquanto o pagamento nao
+                      vence.
+                    </p>
+                    <code className="pix__code">
+                      00020126_codigo_de_demonstracao_sem_gateway_conectado_5204000053039865802BR
+                    </code>
+                  </div>
+                </div>
+              )}
+
+              {method === 'boleto' && (
+                <div className="flow__fieldset" key="boleto">
+                  <div className="notice notice--warn">
+                    <span className="notice__icon" aria-hidden="true">
+                      !
+                    </span>
+                    <p>
+                      O boleto tem compensacao de ate tres dias uteis. Para nao haver interrupcao
+                      de acesso, ele e emitido cinco dias antes do fim da avaliacao.
+                    </p>
+                  </div>
+                  <dl className="summary">
+                    <div>
+                      <dt>Valor</dt>
+                      <dd>{brl(PLAN.price)}</dd>
+                    </div>
+                    <div>
+                      <dt>Emissao</dt>
+                      <dd>5 dias antes de {formatDate(account.trialEndsAt)}</dd>
+                    </div>
+                    <div>
+                      <dt>Enviado para</dt>
+                      <dd>{account.profile.email}</dd>
+                    </div>
+                  </dl>
+                </div>
+              )}
+
+              <dl className="summary">
+                <div>
+                  <dt>Plano</dt>
+                  <dd>{PLAN.name}</dd>
+                </div>
+                <div>
+                  <dt>Hoje voce paga</dt>
+                  <dd style={{ color: 'var(--ok)' }}>{brl(0)}</dd>
+                </div>
+                <div>
+                  <dt>Primeira cobranca</dt>
+                  <dd>
+                    {brl(PLAN.price)} em {formatDate(account.trialEndsAt)}
+                  </dd>
+                </div>
+              </dl>
+
+              <div className="flow__actions">
+                <Button to="/cadastro" variant="ghost">
+                  ← Voltar
+                </Button>
+                <Button type="submit" loading={processing} variant="teal">
+                  {processing ? 'Confirmando…' : 'Confirmar e liberar o download'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </Reveal>
+
+        <Reveal anim="fade" delay={320}>
+          <p className="flow__foot">
+            Dados de cartao nunca devem trafegar pelo servidor da propria aplicacao. Na integracao
+            real, o cartao e tokenizado no navegador pelo SDK do gateway e apenas o token e
+            enviado.
+          </p>
+        </Reveal>
+      </div>
+    </div>
+  )
+}
+
+/** Marca visual no lugar do QR Code real, que so o gateway pode gerar. */
+function PixPlaceholder() {
+  const cells = Array.from({ length: 121 }, (_, i) => {
+    const r = Math.floor(i / 11)
+    const c = i % 11
+    const corner = (r < 3 && c < 3) || (r < 3 && c > 7) || (r > 7 && c < 3)
+    return corner || (r * 7 + c * 3) % 5 < 2
+  })
+
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(11, 1fr)',
+        gap: 3,
+        width: 176,
+        height: 176,
+        padding: 12,
+        borderRadius: 'var(--r-md)',
+        background: '#fff',
+      }}
+      aria-hidden="true"
+    >
+      {cells.map((on, i) => (
+        <span
+          key={i}
+          style={{
+            background: on ? '#0b1b3a' : 'transparent',
+            borderRadius: 2,
+            animation: `fade-in 500ms var(--ease-out) ${i * 4}ms both`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}

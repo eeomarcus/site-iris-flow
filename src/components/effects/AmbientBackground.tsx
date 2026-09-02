@@ -2,20 +2,19 @@ import { useMemo } from 'react'
 import './ambient.css'
 
 type Props = {
-  /** Densidade de particulas. */
+  /** Densidade de partículas. */
   particles?: number
-  /** Mostra a linha de varredura vertical, alusao ao scan da webcam. */
+  /** Mostra a linha de varredura vertical, alusão à leitura da webcam. */
   scan?: boolean
-  /** Em fundo claro o efeito entra bem mais discreto, para nao competir
-   *  com o texto — o contraste do corpo e requisito, nao preferencia. */
+  /** Em fundo claro o efeito entra bem mais discreto, para não competir
+   *  com o texto. O contraste do corpo é requisito, não preferência. */
   light?: boolean
 }
 
 /**
- * Movimento ambiente de fundo: gradientes liquidos em morphing,
- * particulas a deriva e uma linha de varredura sutil.
- * Efeitos 6, 17, 18 e 20 do catalogo da SVGator.
- * Puramente decorativo — marcado como aria-hidden.
+ * Movimento ambiente de fundo: gradientes líquidos em morphing,
+ * partículas à deriva e uma linha de varredura sutil. É puramente
+ * decorativo, e por isso sai marcado como aria-hidden.
  */
 export function AmbientBackground({ particles = 26, scan = true, light = false }: Props) {
   const dots = useMemo(

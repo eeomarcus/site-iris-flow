@@ -4,7 +4,7 @@ import { Header } from './Header'
 import { Footer } from './Footer'
 import './layout.css'
 
-/** Rola para o topo (ou para a ancora) a cada mudanca de rota. */
+/** Rola para o topo, ou para a âncora, a cada mudança de rota. */
 function ScrollManager() {
   const { pathname, hash } = useLocation()
 
@@ -28,13 +28,13 @@ export function Layout() {
   return (
     <>
       <a className="skip-link" href="#conteudo">
-        Pular para o conteudo
+        Pular para o conteúdo
       </a>
       <ScrollManager />
       <Header />
-      {/* key força a transicao de pagina a cada rota — efeito 22 do catalogo.
-          Sem padding-top: cada rota abre com a propria faixa escura, que
-          corre por baixo do cabecalho transparente. */}
+      {/* A key remonta o <main> a cada rota, o que dá a transição de página.
+          Sem padding-top: cada rota abre com a própria faixa escura, que
+          corre por baixo do cabeçalho transparente. */}
       <main id="conteudo" key={pathname} className="main anim-page">
         <Outlet />
       </main>

@@ -1,26 +1,33 @@
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react'
-import { useLocalStorage } from '@/hooks/useLocalStorage'
-import { PLAN } from '@/data/content'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react'
+import { supabase } from '@/lib/supabase'
+import * as api from '@/services/api'
 
 /* ============================================================
    Estado de conta e assinatura.
 
-   Este projeto NAO usa banco de dados: tudo vive em memoria e em
-   localStorage, apenas para que os fluxos de cadastro, checkout e
-   painel sejam navegaveis de ponta a ponta.
+   A fonte da verdade é o Supabase. Este contexto guarda em memória a
+   conta do usuário logado e a mantém em dia com a sessão: ao entrar,
+   ao sair e ao recarregar a página.
 
-   Para integrar de verdade, troque as funcoes deste arquivo por
-   chamadas aos endpoints de src/services/api.ts — a forma dos dados
-   ja esta desenhada para isso.
+   Nada aqui grava em localStorage. Quem persiste a sessão é o próprio
+   supabase-js; a conta é sempre relida do banco.
    ============================================================ */
 
 export type Profile = {
-  /** Quem paga: familiar responsavel, cuidador principal. */
+  /** Quem paga: familiar responsável ou cuidador principal. */
   buyerName: string
   email: string
   phone: string
   document: string
-  /** Quem usa: a pessoa com restricao motora severa. */
+  /** Quem usa: a pessoa com restrição motora severa. */
   userName: string
   relation: string
   condition: string
@@ -33,10 +40,11 @@ export type Profile = {
 
 export type Payment = {
   method: 'cartao' | 'pix' | 'boleto'
-  /** Somente os quatro ultimos digitos sao guardados no estado local. */
+  /** Somente os quatro últimos dígitos trafegam e são guardados. */
   cardLast4?: string
   cardBrand?: string
   holder?: string
+  /** 1 para cobrança mensal, 12 para anual. */
   installments?: number
 }
 
@@ -44,7 +52,8 @@ export type Account = {
   id: string
   profile: Profile
   payment?: Payment
-  status: 'avaliacao' | 'ativa' | 'cancelada'
+  /** 'inadimplente' vem do gateway; as outras nascem no próprio site. */
+  status: 'avaliacao' | 'ativa' | 'cancelada' | 'inadimplente'
   createdAt: string
   trialEndsAt: string
   nextChargeAt: string
@@ -53,76 +62,135 @@ export type Account = {
 
 type Ctx = {
   account: Account | null
-  /** Cria a conta a partir do formulario de cadastro e inicia a avaliacao gratuita. */
-  register: (profile: Profile) => Account
-  /** Confirma o meio de pagamento — a cobranca so ocorre ao fim da avaliacao. */
-  attachPayment: (payment: Payment) => void
-  /** Entrar: neste mock, apenas confere o e-mail contra a conta salva. */
-  signIn: (email: string) => boolean
-  signOut: () => void
-  cancel: () => void
-  reactivate: () => void
+  /**
+   * Há sessão do Supabase aberta. Pode ser verdadeiro com `account`
+   * nulo: é o caso de quem criou o usuário mas abandonou o cadastro
+   * antes de concluir, e precisa voltar para /cadastro, não para o
+   * login.
+   */
+  authenticated: boolean
+  /**
+   * Verdadeiro enquanto a sessão inicial está sendo lida. As telas de
+   * fluxo precisam esperar isso antes de redirecionar, senão um F5 no
+   * /conta joga o usuário para o login antes da sessão carregar.
+   */
+  loading: boolean
+  /** Cria a conta, autentica e abre o período de avaliação. */
+  register: (profile: Profile, password: string) => Promise<Account>
+  /** Guarda a forma de pagamento. A cobrança só ocorre ao fim da avaliação. */
+  attachPayment: (payment: Payment) => Promise<void>
+  signIn: (email: string, password: string) => Promise<void>
+  signOut: () => Promise<void>
+  cancel: () => Promise<void>
+  reactivate: () => Promise<void>
+  /** Relê a conta do banco. */
+  refresh: () => Promise<void>
 }
 
 const AccountContext = createContext<Ctx | null>(null)
 
-const addDays = (days: number) => {
-  const d = new Date()
-  d.setDate(d.getDate() + days)
-  return d.toISOString()
-}
-
 export function AccountProvider({ children }: { children: ReactNode }) {
-  const [account, setAccount, clearAccount] = useLocalStorage<Account | null>(
-    'irisflow:account',
-    null,
-  )
+  const [account, setAccount] = useState<Account | null>(null)
+  const [authenticated, setAuthenticated] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  const register = useCallback(
-    (profile: Profile) => {
-      const next: Account = {
-        id: `irisflow_${Math.random().toString(36).slice(2, 10)}`,
-        profile,
-        status: 'avaliacao',
-        createdAt: new Date().toISOString(),
-        trialEndsAt: addDays(PLAN.trialDays),
-        nextChargeAt: addDays(PLAN.trialDays),
-        priceBRL: PLAN.price,
+  const refresh = useCallback(async () => {
+    try {
+      const { data } = (await supabase?.auth.getSession()) ?? { data: { session: null } }
+      setAuthenticated(Boolean(data.session))
+      setAccount(await api.fetchAccount())
+    } catch {
+      // sem sessão, sem configuração ou rede fora: a UI trata como deslogado
+      setAuthenticated(false)
+      setAccount(null)
+    }
+  }, [])
+
+  // Carrega a sessão de partida e acompanha login e logout, inclusive os
+  // que acontecem em outra aba.
+  useEffect(() => {
+    let vivo = true
+
+    refresh().finally(() => {
+      if (vivo) setLoading(false)
+    })
+
+    const { data: sub } = supabase?.auth.onAuthStateChange((evento) => {
+      if (!vivo) return
+      if (evento === 'SIGNED_OUT') {
+        setAccount(null)
+        setAuthenticated(false)
+        return
       }
-      setAccount(next)
-      return next
-    },
-    [setAccount],
-  )
+      if (evento === 'SIGNED_IN' || evento === 'TOKEN_REFRESHED') {
+        void refresh()
+      }
+    }) ?? { data: { subscription: null } }
 
-  const attachPayment = useCallback(
-    (payment: Payment) => {
-      setAccount((prev) => (prev ? { ...prev, payment } : prev))
-    },
-    [setAccount],
-  )
+    return () => {
+      vivo = false
+      sub.subscription?.unsubscribe()
+    }
+  }, [refresh])
 
-  const signIn = useCallback(
-    (email: string) => {
-      if (!account) return false
-      return account.profile.email.trim().toLowerCase() === email.trim().toLowerCase()
-    },
-    [account],
-  )
+  const register = useCallback(async (profile: Profile, password: string) => {
+    const nova = await api.signUp(profile, password)
+    setAccount(nova)
+    setAuthenticated(true)
+    return nova
+  }, [])
 
-  const cancel = useCallback(() => {
-    setAccount((prev) => (prev ? { ...prev, status: 'cancelada' } : prev))
-  }, [setAccount])
+  const attachPayment = useCallback(async (payment: Payment) => {
+    await api.attachPaymentMethod(payment)
+    setAccount(await api.fetchAccount())
+  }, [])
 
-  const reactivate = useCallback(() => {
-    setAccount((prev) =>
-      prev ? { ...prev, status: prev.payment ? 'ativa' : 'avaliacao' } : prev,
-    )
-  }, [setAccount])
+  const signIn = useCallback(async (email: string, password: string) => {
+    await api.signIn(email, password)
+    setAccount(await api.fetchAccount())
+  }, [])
+
+  const signOut = useCallback(async () => {
+    await api.signOut()
+    setAccount(null)
+    setAuthenticated(false)
+  }, [])
+
+  const cancel = useCallback(async () => {
+    await api.cancelSubscription()
+    setAccount(await api.fetchAccount())
+  }, [])
+
+  const reactivate = useCallback(async () => {
+    await api.reactivateSubscription()
+    setAccount(await api.fetchAccount())
+  }, [])
 
   const value = useMemo<Ctx>(
-    () => ({ account, register, attachPayment, signIn, signOut: clearAccount, cancel, reactivate }),
-    [account, register, attachPayment, signIn, clearAccount, cancel, reactivate],
+    () => ({
+      account,
+      authenticated,
+      loading,
+      register,
+      attachPayment,
+      signIn,
+      signOut,
+      cancel,
+      reactivate,
+      refresh,
+    }),
+    [
+      account,
+      authenticated,
+      loading,
+      register,
+      attachPayment,
+      signIn,
+      signOut,
+      cancel,
+      reactivate,
+      refresh,
+    ],
   )
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>

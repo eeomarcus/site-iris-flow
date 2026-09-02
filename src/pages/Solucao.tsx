@@ -6,40 +6,43 @@ import { Comparison } from '@/components/sections/Comparison'
 import { CallToAction } from '@/components/sections/CallToAction'
 import { Reveal } from '@/components/effects/Reveal'
 import { Card, CardIcon } from '@/components/ui/Card'
+import { Icon } from '@/components/ui/Icon'
 import { Button } from '@/components/ui/Button'
-import { DOWNLOADS } from '@/services/api'
+import { useDownloads } from '@/hooks/useDownloads'
 
 const LIMITS = [
   {
     title: 'O que a IrisFlow entrega',
     tone: 'ok' as const,
     items: [
-      'Controle pleno dentro das proprias telas, desenhadas com alvos grandes e bem espacados',
-      'Controle do cursor do sistema operacional em nivel funcional: abrir um programa, navegar, clicar em botoes de tamanho razoavel',
-      'Composicao de texto por fixacao, com um evento por caractere e tempo aproximadamente constante',
-      'Funcionamento offline do nucleo de rastreamento, do teclado e das frases rapidas',
+      'Controle pleno dentro das próprias telas, desenhadas com alvos grandes e bem espaçados',
+      'Controle do cursor do sistema operacional em nível funcional: abrir um programa, navegar, clicar em botões de tamanho razoável',
+      'Composição de texto por fixação, com um evento por caractere e tempo aproximadamente constante',
+      'Funcionamento offline do núcleo de rastreamento, do teclado e das frases rápidas',
     ],
   },
   {
-    title: 'O que ele ainda nao entrega',
+    title: 'O que ela ainda não entrega',
     tone: 'warn' as const,
     items: [
       'Interfaces de terceiros com alvos pequenos, menus densos ou elementos que exigem arraste preciso',
-      'Uso confortavel por quem apresenta movimento involuntario acentuado, espasticidade ou tremor — condicoes ainda nao avaliadas',
-      'Taxa de acionamento acidental medida em uso continuo real, que so o programa de validacao vai responder',
-      'Estudo clinico publicado, atributo em que as solucoes internacionais tem decadas de vantagem',
+      'Uso confortável por quem apresenta movimento involuntário acentuado, espasticidade ou tremor, condições ainda não avaliadas',
+      'Taxa de acionamento acidental medida em uso contínuo real, que só o programa de validação vai responder',
+      'Estudo clínico publicado, atributo em que as soluções internacionais têm décadas de vantagem',
     ],
   },
 ]
 
 export default function Solucao() {
+  const downloads = useDownloads()
+
   return (
     <>
       <PageHead
         eyebrow="O produto"
-        title="IrisFlow: uma plataforma de comunicacao, nao um rastreador."
-        highlight={['comunicacao,']}
-        lead="Aplicacao instalavel para Windows, macOS e Linux, construida sobre Electron, que roda integralmente no dispositivo do usuario. O rastreamento ocular e a camada de entrada; sobre ela foram construidos ambientes completos de comunicacao, controle, lazer, cuidado e emergencia."
+        title="IrisFlow: uma plataforma de comunicação, não um rastreador."
+        highlight={['comunicação,']}
+        lead="Aplicação instalável para Windows, macOS e Linux, construída sobre Electron, que roda integralmente no dispositivo do usuário. O rastreamento ocular é a camada de entrada; sobre ela foram construídos ambientes completos de comunicação, controle, lazer, cuidado e emergência."
       />
 
       <section className="section section--tight">
@@ -49,7 +52,7 @@ export default function Solucao() {
               <Reveal key={block.title} anim={i === 0 ? 'right' : 'left'} delay={i * 120}>
                 <Card as="div">
                   <CardIcon tone={block.tone === 'ok' ? 'teal' : 'blue'}>
-                    {block.tone === 'ok' ? '✓' : '!'}
+                    <Icon name={block.tone === 'ok' ? 'check' : 'alerta'} size={26} />
                   </CardIcon>
                   <h3>{block.title}</h3>
                   <ul style={{ paddingLeft: '1.1rem', margin: 0 }}>
@@ -75,8 +78,8 @@ export default function Solucao() {
                 borderLeft: '2px solid var(--line)',
               }}
             >
-              Preferimos declarar o limite a prometer o que a fisica do sensor nao permite. Essa e
-              a mesma razao pela qual publicamos os indicadores de precisao junto com as condicoes
+              Preferimos declarar o limite a prometer o que a física do sensor não permite. É a
+              mesma razão pela qual publicamos os indicadores de precisão junto com as condições
               em que foram medidos.
             </p>
           </Reveal>
@@ -91,10 +94,10 @@ export default function Solucao() {
       <section className="section section--tight">
         <div className="container center">
           <Reveal anim="up">
-            <h2>Disponivel para os tres sistemas</h2>
+            <h2>Disponível para os três sistemas</h2>
             <p className="lead" style={{ maxWidth: '58ch', marginInline: 'auto' }}>
-              Uma base de codigo unica gera instaladores para Windows, macOS e Linux. O download
-              fica liberado assim que a conta e criada.
+              Uma base de código única gera instaladores para Windows, macOS e Linux. O download
+              fica liberado assim que a conta é criada.
             </p>
           </Reveal>
           <Reveal anim="up" delay={160}>
@@ -107,13 +110,13 @@ export default function Solucao() {
                 marginTop: 'var(--sp-5)',
               }}
             >
-              <Button href={DOWNLOADS.windows} variant="secondary">
+              <Button href={downloads.windows} variant="secondary">
                 Windows
               </Button>
-              <Button href={DOWNLOADS.macos} variant="secondary">
+              <Button href={downloads.macos} variant="secondary">
                 macOS
               </Button>
-              <Button href={DOWNLOADS.linux} variant="secondary">
+              <Button href={downloads.linux} variant="secondary">
                 Linux
               </Button>
             </div>

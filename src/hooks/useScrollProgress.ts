@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-/** Progresso vertical da pagina, de 0 a 1. Alimenta a barra de leitura e o parallax. */
+/** Progresso vertical da página, de 0 a 1. Alimenta a barra de leitura e o parallax. */
 export function useScrollProgress() {
   const [progress, setProgress] = useState(0)
   const [scrolled, setScrolled] = useState(false)

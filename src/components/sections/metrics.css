@@ -57,8 +57,6 @@
   border-radius: 50%;
   border: 1px solid var(--warn-line);
   color: var(--warn);
-  font-family: var(--font-display);
-  font-size: 1rem;
 }
 
 .metrics__caveat p {

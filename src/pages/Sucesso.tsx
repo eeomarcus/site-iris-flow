@@ -4,42 +4,46 @@ import { AmbientBackground } from '@/components/effects/AmbientBackground'
 import { Reveal } from '@/components/effects/Reveal'
 import { Button } from '@/components/ui/Button'
 import { Card, CardIcon } from '@/components/ui/Card'
+import { SessionLoading } from '@/components/ui/Skeleton'
+import { Icon, type IconName } from '@/components/ui/Icon'
 import { useAccount } from '@/context/AccountContext'
 import { brl, daysUntil, formatDate } from '@/utils/format'
-import { DOWNLOADS } from '@/services/api'
+import { useDownloads } from '@/hooks/useDownloads'
 import { PLAN } from '@/data/content'
 import './checkout.css'
 import './sucesso.css'
 
-const NEXT_STEPS = [
+const NEXT_STEPS: { icon: IconName; title: string; text: string }[] = [
   {
-    icon: '⤓',
+    icon: 'download',
     title: 'Baixe e instale',
-    text: 'O instalador do sistema que voce escolheu esta liberado abaixo. A instalacao nao pede permissao especial nem drivers de camera.',
+    text: 'O instalador do sistema que você escolheu está liberado abaixo. A instalação não pede permissão especial nem drivers de câmera.',
   },
   {
-    icon: '◎',
+    icon: 'webcam',
     title: 'Prepare o posto de uso',
-    text: 'Deixe a IrisFlow medir distancia, enquadramento e iluminacao antes de calibrar. Ele indica o que ajustar quando nao consegue corrigir sozinho.',
+    text: 'Deixe a IrisFlow medir distância, enquadramento e iluminação antes de calibrar. Ela indica o que ajustar quando não consegue corrigir sozinha.',
   },
   {
-    icon: '✓',
+    icon: 'alvo',
     title: 'Calibre e experimente',
-    text: 'Nove pontos, menos de trinta segundos. Depois disso, comece pelo teclado e pelas frases rapidas — sao os modulos mais usados no primeiro dia.',
+    text: 'Nove pontos, menos de trinta segundos. Depois disso, comece pelo teclado e pelas frases rápidas, que são os módulos mais usados no primeiro dia.',
   },
 ]
 
 export default function Sucesso() {
-  const { account } = useAccount()
+  const { account, authenticated, loading } = useAccount()
+  const downloads = useDownloads()
   const [ready, setReady] = useState(false)
 
-  // Pequena espera para que a animacao de confirmacao seja percebida.
+  // Pequena espera para que a animação de confirmação seja percebida.
   useEffect(() => {
     const t = window.setTimeout(() => setReady(true), 450)
     return () => window.clearTimeout(t)
   }, [])
 
-  if (!account) return <Navigate to="/cadastro" replace />
+  if (loading) return <SessionLoading />
+  if (!account) return <Navigate to={authenticated ? '/cadastro' : '/entrar'} replace />
 
   return (
     <div className="flow">
@@ -70,9 +74,9 @@ export default function Sucesso() {
 
           <Reveal anim="up" delay={300}>
             <p className="lead success__lead">
-              A avaliacao de {PLAN.trialDays} dias comecou. Ate{' '}
-              <strong>{formatDate(account.trialEndsAt)}</strong> voces tem acesso completo a
-              plataforma, sem nenhuma cobranca.
+              A avaliação de {PLAN.trialDays} dias começou. Até{' '}
+              <strong>{formatDate(account.trialEndsAt)}</strong> vocês têm acesso completo à
+              plataforma, sem nenhuma cobrança.
             </p>
           </Reveal>
         </div>
@@ -85,17 +89,17 @@ export default function Sucesso() {
                 <dd>{account.profile.email}</dd>
               </div>
               <div>
-                <dt>Usuario</dt>
+                <dt>Usuário</dt>
                 <dd>{account.profile.userName}</dd>
               </div>
               <div>
-                <dt>Situacao</dt>
+                <dt>Situação</dt>
                 <dd style={{ color: 'var(--ok)' }}>
-                  Em avaliacao — {daysUntil(account.trialEndsAt)} dias restantes
+                  Em avaliação, {daysUntil(account.trialEndsAt)} dias restantes
                 </dd>
               </div>
               <div>
-                <dt>Primeira cobranca</dt>
+                <dt>Primeira cobrança</dt>
                 <dd>
                   {brl(PLAN.price)} em {formatDate(account.nextChargeAt)}
                   {account.payment?.cardLast4
@@ -113,17 +117,17 @@ export default function Sucesso() {
           <div className="download">
             <h2 className="download__title">Baixe o aplicativo</h2>
             <p className="download__note">
-              Estes links apontam para o build de distribuicao do aplicativo Electron. Configure as
-              URLs em <code>src/services/api.ts</code>.
+              Os links vêm da tabela <code>app_releases</code>. Enquanto não houver uma versão
+              publicada lá, os botões ficam sem destino.
             </p>
             <div className="download__buttons">
-              <Button href={DOWNLOADS.windows} variant="teal" loading={!ready}>
+              <Button href={downloads.windows} variant="teal" loading={!ready}>
                 Windows
               </Button>
-              <Button href={DOWNLOADS.macos} variant="secondary" loading={!ready}>
+              <Button href={downloads.macos} variant="secondary" loading={!ready}>
                 macOS
               </Button>
-              <Button href={DOWNLOADS.linux} variant="secondary" loading={!ready}>
+              <Button href={downloads.linux} variant="secondary" loading={!ready}>
                 Linux
               </Button>
             </div>
@@ -134,7 +138,9 @@ export default function Sucesso() {
           {NEXT_STEPS.map((s, i) => (
             <Reveal key={s.title} anim="up" delay={560 + i * 100}>
               <Card as="div">
-                <CardIcon tone={i === 2 ? 'teal' : 'blue'}>{s.icon}</CardIcon>
+                <CardIcon tone={i === 2 ? 'teal' : 'blue'}>
+                  <Icon name={s.icon} size={26} />
+                </CardIcon>
                 <h3>{s.title}</h3>
                 <p>{s.text}</p>
               </Card>
@@ -147,7 +153,7 @@ export default function Sucesso() {
             <Link to="/conta" className="underline-grow" style={{ color: 'var(--ok)' }}>
               Ir para o painel da conta
             </Link>{' '}
-            · Duvidas na instalacao?{' '}
+            · Dúvidas na instalação?{' '}
             <Link to="/contato" className="underline-grow">
               Fale com a equipe
             </Link>

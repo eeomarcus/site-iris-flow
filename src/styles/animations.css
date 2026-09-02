@@ -1,5 +1,5 @@
 /* ============================================================
-   Biblioteca de animacoes do site da IrisFlow
+   Biblioteca de animações do site da IrisFlow
    Efeitos derivados do repertorio catalogado pela SVGator em
    "31 Website Animation Examples and Effects":
      ambient background motion, animated gradients, liquid motion,
@@ -106,7 +106,7 @@
   }
 }
 
-/* ---------- 4. simbolo da marca ---------- */
+/* ---------- 4. símbolo da marca ---------- */
 @keyframes iris-pulse {
   0%,
   100% {
@@ -297,7 +297,7 @@
   }
 }
 
-/* ---------- 8. transicoes de pagina ---------- */
+/* ---------- 8. transições de página ---------- */
 @keyframes page-enter {
   from {
     opacity: 0;
@@ -318,7 +318,7 @@
   }
 }
 
-/* ---------- 9. simbolo da iris: rotacao lenta e continua ---------- */
+/* ---------- 9. símbolo da íris: rotação lenta e contínua ---------- */
 @keyframes iris-spin {
   to {
     transform: rotate(360deg);
@@ -338,7 +338,7 @@
 
 /* ============================================================
    Classes utilitarias construidas sobre os keyframes acima.
-   Todas leem os tokens, entao funcionam igual no fundo claro e
+   Todas leem os tokens, então funcionam igual no fundo claro e
    dentro de uma faixa .on-dark.
    ============================================================ */
 
@@ -358,8 +358,8 @@
   animation: spin 900ms linear infinite;
 }
 
-/* Superficie elevada padrao. No claro e um cartao branco com sombra
-   suave; dentro de .on-dark vira um painel translucido. */
+/* Superfície elevada padrão. No claro e um cartão branco com sombra
+   suave; dentro de .on-dark vira um painel translúcido. */
 .panel {
   background: var(--surface);
   border: 1px solid var(--line);

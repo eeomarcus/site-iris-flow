@@ -24,7 +24,7 @@
   background: rgba(127, 127, 127, 0.12);
 }
 
-/* Os dois icones ocupam a mesma celula; so um aparece por vez. */
+/* Os dois ícones ocupam a mesma celula; só um aparece por vez. */
 .theme-toggle__icons {
   position: relative;
   display: grid;
@@ -61,7 +61,7 @@
   transform: rotate(90deg) scale(0.5);
 }
 
-/* Variante com rotulo, usada na gaveta mobile. */
+/* Variante com rótulo, usada na gaveta mobile. */
 .theme-toggle--full {
   width: 100%;
   height: auto;

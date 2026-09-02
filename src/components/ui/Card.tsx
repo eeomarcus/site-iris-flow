@@ -4,17 +4,17 @@ import './card.css'
 type Props = {
   children: ReactNode
   className?: string
-  /** Mantido por compatibilidade; a superficie ja se adapta ao fundo. */
+  /** Mantido por compatibilidade: a superfície já se adapta ao fundo. */
   glass?: boolean
-  /** Ativa elevacao e brilho no hover. */
+  /** Ativa elevação e brilho no hover. */
   interactive?: boolean
   as?: 'div' | 'article' | 'li' | 'section'
 }
 
 /**
- * Cartao base do site. A classe .panel le os tokens do contexto: no
- * fundo claro e um cartao branco com sombra suave; dentro de uma faixa
- * .on-dark vira um painel translucido, sem nenhuma troca de prop.
+ * Cartão base do site. A classe .panel lê os tokens do contexto: no
+ * fundo claro é um cartão branco com sombra suave; dentro de uma faixa
+ * .on-dark vira um painel translúcido, sem nenhuma troca de prop.
  */
 export function Card({
   children,

@@ -8,8 +8,8 @@ type Props = {
 }
 
 /**
- * Camada com deslocamento em parallax conforme o scroll.
- * Efeito 15 do catalogo da SVGator (vertical scrolling effects).
+ * Camada que se desloca em parallax conforme a rolagem. Respeita a
+ * preferência de movimento reduzido do sistema.
  */
 export function Parallax({ children, speed = -0.12, className = '' }: Props) {
   const ref = useRef<HTMLDivElement>(null)

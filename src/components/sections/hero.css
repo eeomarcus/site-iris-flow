@@ -3,7 +3,7 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  /* O cabecalho e transparente e flutua sobre esta faixa, entao a
+  /* O cabeçalho e transparente e flutua sobre esta faixa, então a
      altura dele entra no respiro superior. */
   padding-block: calc(var(--header-h) + var(--sp-6)) var(--sp-9);
   overflow: hidden;
@@ -63,8 +63,8 @@
   font-size: var(--fs-display);
   line-height: 1.16;
   margin-bottom: var(--sp-5);
-  /* As quebras sao feitas a mao no JSX; limitar a largura aqui
-     provocaria uma segunda quebra automatica dentro da mascara. */
+  /* As quebras são feitas a mão no JSX; limitar a largura aqui
+     provocaria uma segunda quebra automática dentro da máscara. */
   max-width: 100%;
 }
 

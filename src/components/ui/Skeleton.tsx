@@ -8,8 +8,7 @@ type Props = {
 }
 
 /**
- * Placeholder animado. Efeitos 24 e 25 do catalogo da SVGator
- * (loading skeleton screens / loading animations).
+ * Bloco cinza animado que ocupa o lugar do conteúdo enquanto ele carrega.
  */
 export function Skeleton({ width = '100%', height = '1rem', radius = '8px', className = '' }: Props) {
   return (
@@ -21,10 +20,10 @@ export function Skeleton({ width = '100%', height = '1rem', radius = '8px', clas
   )
 }
 
-/** Cartao inteiro em estado de carregamento, usado no painel da conta. */
+/** Cartão inteiro em estado de carregamento, usado no painel da conta. */
 export function SkeletonCard() {
   return (
-    <div className="skeleton-card" role="status" aria-label="Carregando conteudo">
+    <div className="skeleton-card" role="status" aria-label="Carregando conteúdo">
       <Skeleton width="52px" height="52px" radius="14px" />
       <Skeleton width="62%" height="1.1rem" />
       <Skeleton width="94%" height="0.8rem" />
@@ -34,7 +33,20 @@ export function SkeletonCard() {
   )
 }
 
-/** Spinner circular para botoes em processamento. */
+/**
+ * Espera das rotas de fluxo enquanto a sessão do Supabase é lida.
+ * Sem isso, um F5 no /conta redirecionaria para o login antes de a
+ * sessão terminar de carregar.
+ */
+export function SessionLoading() {
+  return (
+    <div className="container section">
+      <SkeletonCard />
+    </div>
+  )
+}
+
+/** Indicador circular para botões em processamento. */
 export function Spinner({ size = 18 }: { size?: number }) {
   return (
     <span

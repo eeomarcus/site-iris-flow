@@ -5,15 +5,15 @@ import { Reveal } from '@/components/effects/Reveal'
 import { Stepper } from '@/components/ui/Stepper'
 import { Field, SelectField, CheckField } from '@/components/ui/Field'
 import { Button } from '@/components/ui/Button'
+import { Icon } from '@/components/ui/Icon'
 import { useAccount, type Profile } from '@/context/AccountContext'
 import { isCPF, isEmail, isPhone, maskCPF, maskPhone } from '@/utils/format'
-import { fakeDelay } from '@/services/api'
 import { PLAN } from '@/data/content'
 import './checkout.css'
 
-const STEPS = ['Quem paga', 'Quem usa', 'Confirmacao']
+const STEPS = ['Quem paga', 'Quem usa', 'Confirmação']
 
-type Form = Profile & { terms: boolean }
+type Form = Profile & { terms: boolean; password: string; passwordConfirm: string }
 
 const EMPTY: Form = {
   buyerName: '',
@@ -28,7 +28,12 @@ const EMPTY: Form = {
   prescriberRole: '',
   newsletter: true,
   terms: false,
+  password: '',
+  passwordConfirm: '',
 }
+
+/** Mesmo mínimo exigido pelo Supabase Auth por padrão. */
+const SENHA_MINIMA = 8
 
 type Errors = Partial<Record<keyof Form, string>>
 
@@ -37,6 +42,7 @@ export default function Cadastro() {
   const [form, setForm] = useState<Form>(EMPTY)
   const [errors, setErrors] = useState<Errors>({})
   const [saving, setSaving] = useState(false)
+  const [falha, setFalha] = useState<string | null>(null)
   const { register } = useAccount()
   const navigate = useNavigate()
 
@@ -59,20 +65,24 @@ export default function Cadastro() {
     if (s === 0) {
       if (form.buyerName.trim().split(' ').length < 2)
         next.buyerName = 'Informe nome e sobrenome.'
-      if (!isEmail(form.email)) next.email = 'Informe um e-mail valido.'
+      if (!isEmail(form.email)) next.email = 'Informe um e-mail válido.'
       if (!isPhone(form.phone)) next.phone = 'Informe um telefone com DDD.'
-      if (!isCPF(form.document)) next.document = 'CPF invalido — confira os digitos.'
+      if (!isCPF(form.document)) next.document = 'CPF inválido. Confira os dígitos.'
+      if (form.password.length < SENHA_MINIMA)
+        next.password = `A senha precisa ter ao menos ${SENHA_MINIMA} caracteres.`
+      if (form.passwordConfirm !== form.password)
+        next.passwordConfirm = 'As duas senhas precisam ser iguais.'
     }
 
     if (s === 1) {
       if (form.userName.trim().length < 3) next.userName = 'Informe o nome de quem vai usar.'
-      if (!form.relation) next.relation = 'Selecione a relacao com o usuario.'
-      if (!form.condition) next.condition = 'Selecione a condicao principal.'
+      if (!form.relation) next.relation = 'Selecione a relação com o usuário.'
+      if (!form.condition) next.condition = 'Selecione a condição principal.'
       if (!form.os) next.os = 'Selecione o sistema operacional do computador.'
     }
 
     if (s === 2) {
-      if (!form.terms) next.terms = 'E preciso aceitar os termos para continuar.'
+      if (!form.terms) next.terms = 'É preciso aceitar os termos para continuar.'
     }
 
     setErrors(next)
@@ -93,15 +103,25 @@ export default function Cadastro() {
   const submit = async (e: FormEvent) => {
     e.preventDefault()
     if (!validateStep(2)) return
+
     setSaving(true)
-    // Sem back-end: a conta e criada apenas no estado local.
-    // Trocar por createAccount(profile) de src/services/api.ts.
-    await fakeDelay(1000)
-    const { terms: _terms, ...profile } = form
+    setFalha(null)
+
+    // A senha vai para o Supabase Auth, não para a tabela de perfis:
+    // por isso ela sai daqui antes de o restante virar Profile.
+    const { terms: _terms, password, passwordConfirm: _confirm, ...profile } = form
     void _terms
-    register(profile)
-    setSaving(false)
-    navigate('/pagamento')
+    void _confirm
+
+    try {
+      await register(profile, password)
+      navigate('/pagamento')
+    } catch (e) {
+      setFalha(e instanceof Error ? e.message : 'Não foi possível criar a conta.')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -110,7 +130,7 @@ export default function Cadastro() {
 
       <div className="container container--narrow flow__inner">
         <Reveal anim="fade">
-          <span className="eyebrow">Avaliacao gratuita</span>
+          <span className="eyebrow">Avaliação gratuita</span>
         </Reveal>
 
         <Reveal anim="up">
@@ -121,13 +141,23 @@ export default function Cadastro() {
 
         <Reveal anim="up" delay={120}>
           <p className="lead flow__lead">
-            Nao pedimos cartao agora. A forma de pagamento so entra na etapa seguinte, e a primeira
-            cobranca acontece depois dos {PLAN.trialDays} dias — se voces decidirem continuar.
+            Não pedimos cartão agora. A forma de pagamento só entra na etapa seguinte, e a
+            primeira cobrança acontece depois dos {PLAN.trialDays} dias, se vocês decidirem
+            continuar.
           </p>
         </Reveal>
 
         <Reveal anim="up" delay={200}>
           <div className="flow__card panel">
+            {falha && (
+              <div className="notice notice--warn" role="alert">
+                <span className="notice__icon">
+                  <Icon name="alerta" size={20} />
+                </span>
+                <p>{falha}</p>
+              </div>
+            )}
+
             <Stepper steps={STEPS} current={step} />
 
             <form onSubmit={submit} noValidate>
@@ -136,7 +166,7 @@ export default function Cadastro() {
                   <legend className="flow__legend">
                     Dados de quem responde pela assinatura
                     <span>
-                      Normalmente o familiar responsavel ou o cuidador principal — quem decide e
+                      Normalmente o familiar responsável ou o cuidador principal, quem decide e
                       paga.
                     </span>
                   </legend>
@@ -180,8 +210,30 @@ export default function Cadastro() {
                     error={errors.document}
                     placeholder="000.000.000-00"
                     inputMode="numeric"
-                    hint="Necessario para emissao da nota fiscal da assinatura."
+                    hint="Necessário para emissão da nota fiscal da assinatura."
                   />
+
+                  <div className="flow__row">
+                    <Field
+                      label="Senha"
+                      type="password"
+                      value={form.password}
+                      onChange={set('password')}
+                      error={errors.password}
+                      autoComplete="new-password"
+                      placeholder="••••••••"
+                      hint={`Ao menos ${SENHA_MINIMA} caracteres. É com ela que vocês entram depois.`}
+                    />
+                    <Field
+                      label="Confirmar senha"
+                      type="password"
+                      value={form.passwordConfirm}
+                      onChange={set('passwordConfirm')}
+                      error={errors.passwordConfirm}
+                      autoComplete="new-password"
+                      placeholder="••••••••"
+                    />
+                  </div>
                 </fieldset>
               )}
 
@@ -190,8 +242,8 @@ export default function Cadastro() {
                   <legend className="flow__legend">
                     Dados de quem vai usar a IrisFlow
                     <span>
-                      Quem opera a solucao e a beneficiaria direta. Esses dados ajustam o perfil
-                      inicial de calibracao e de sensibilidade.
+                      Quem opera a solução e a beneficiária direta. Esses dados ajustam o perfil
+                      inicial de calibração e de sensibilidade.
                     </span>
                   </legend>
 
@@ -205,50 +257,50 @@ export default function Cadastro() {
 
                   <div className="flow__row">
                     <SelectField
-                      label="Sua relacao com ela"
+                      label="Sua relação com ela"
                       value={form.relation}
                       onChange={set('relation')}
                       error={errors.relation}
                     >
                       <option value="">Selecione…</option>
-                      <option value="conjuge">Conjuge</option>
+                      <option value="conjuge">Cônjuge</option>
                       <option value="filho">Filho ou filha</option>
-                      <option value="pai-mae">Pai ou mae</option>
-                      <option value="irmao">Irmao ou irma</option>
+                      <option value="pai-mae">Pai ou mãe</option>
+                      <option value="irmao">Irmão ou irmã</option>
                       <option value="cuidador">Cuidador contratado</option>
                       <option value="proprio">Sou eu quem vai usar</option>
                       <option value="outro">Outro</option>
                     </SelectField>
 
                     <SelectField
-                      label="Condicao principal"
+                      label="Condição principal"
                       value={form.condition}
                       onChange={set('condition')}
                       error={errors.condition}
                     >
                       <option value="">Selecione…</option>
-                      <option value="ela">Esclerose lateral amiotrofica (ELA)</option>
+                      <option value="ela">Esclerose lateral amiotrófica (ELA)</option>
                       <option value="tetraplegia">Tetraplegia alta</option>
                       <option value="pc">Paralisia cerebral severa</option>
                       <option value="avc">Sequela grave de AVC</option>
-                      <option value="distrofia">Distrofia muscular avancada</option>
+                      <option value="distrofia">Distrofia muscular avançada</option>
                       <option value="outra">Outra</option>
-                      <option value="prefiro-nao">Prefiro nao informar</option>
+                      <option value="prefiro-nao">Prefiro não informar</option>
                     </SelectField>
                   </div>
 
                   <SelectField
-                    label="Sistema do computador onde a IrisFlow sera instalado"
+                    label="Sistema do computador onde a IrisFlow será instalada"
                     value={form.os}
                     onChange={set('os')}
                     error={errors.os}
-                    hint="Uma webcam comum ja e suficiente — nao e preciso comprar camera."
+                    hint="Uma webcam comum já basta. Não é preciso comprar câmera."
                   >
                     <option value="">Selecione…</option>
                     <option value="windows">Windows</option>
                     <option value="macos">macOS</option>
                     <option value="linux">Linux</option>
-                    <option value="nao-sei">Nao sei dizer</option>
+                    <option value="nao-sei">Não sei dizer</option>
                   </SelectField>
 
                   <div className="flow__optional">
@@ -276,13 +328,13 @@ export default function Cadastro() {
               {step === 2 && (
                 <fieldset className="flow__fieldset">
                   <legend className="flow__legend">
-                    Confira antes de comecar
-                    <span>Nada e cobrado nesta etapa.</span>
+                    Confira antes de começar
+                    <span>Nada é cobrado nesta etapa.</span>
                   </legend>
 
                   <dl className="summary">
                     <div>
-                      <dt>Responsavel</dt>
+                      <dt>Responsável</dt>
                       <dd>{form.buyerName}</dd>
                     </div>
                     <div>
@@ -304,7 +356,7 @@ export default function Cadastro() {
                     <div>
                       <dt>Plano</dt>
                       <dd>
-                        {PLAN.name} — {PLAN.trialDays} dias gratis, depois R$ {PLAN.price} por mes
+                        {PLAN.name}: {PLAN.trialDays} dias grátis, depois R$ {PLAN.price} por mês
                       </dd>
                     </div>
                   </dl>
@@ -318,7 +370,7 @@ export default function Cadastro() {
                         </Link>{' '}
                         e a{' '}
                         <Link to="/privacidade" style={{ color: 'var(--ok)', fontWeight: 600 }}>
-                          politica de privacidade
+                          política de privacidade
                         </Link>
                         .
                       </>
@@ -329,7 +381,7 @@ export default function Cadastro() {
                   />
 
                   <CheckField
-                    label="Quero receber novidades sobre o desenvolvimento do produto e do programa de validacao clinica."
+                    label="Quero receber novidades sobre o desenvolvimento do produto e do programa de validação clínica."
                     checked={form.newsletter}
                     onChange={toggle('newsletter')}
                   />
@@ -338,12 +390,17 @@ export default function Cadastro() {
 
               <div className="flow__actions">
                 {step > 0 ? (
-                  <Button type="button" variant="ghost" onClick={back}>
-                    ← Voltar
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={back}
+                    icon={<Icon name="seta-esquerda" size={18} />}
+                  >
+                    Voltar
                   </Button>
                 ) : (
-                  <Button to="/planos" variant="ghost">
-                    ← Ver o plano
+                  <Button to="/planos" variant="ghost" icon={<Icon name="seta-esquerda" size={18} />}>
+                    Ver o plano
                   </Button>
                 )}
 
@@ -353,7 +410,7 @@ export default function Cadastro() {
                   </Button>
                 ) : (
                   <Button type="submit" loading={saving}>
-                    {saving ? 'Criando conta…' : 'Criar conta e comecar'}
+                    {saving ? 'Criando conta…' : 'Criar conta e começar'}
                   </Button>
                 )}
               </div>
@@ -363,7 +420,7 @@ export default function Cadastro() {
 
         <Reveal anim="fade" delay={320}>
           <p className="flow__foot">
-            Ja tem conta?{' '}
+            Já tem conta?{' '}
             <Link to="/entrar" className="underline-grow" style={{ color: 'var(--ok)' }}>
               Entrar
             </Link>

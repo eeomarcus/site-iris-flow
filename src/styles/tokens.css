@@ -2,13 +2,13 @@
    Design tokens da IrisFlow
    Paleta definida no plano de negocios (topico 2.3 Branding):
    - Azul institucional  #1B54A8  primaria
-   - Azul-marinho        #0B1B3A  ancoragem / pupila do simbolo
-   - Verde-teal          #00A693  confirmacao e indicadores positivos
-   - Brancos e neutros   fundos, "requisito que nao e apenas estetico
+   - Azul-marinho        #0B1B3A  ancoragem / pupila do símbolo
+   - Verde-teal          #00A693  confirmação e indicadores positivos
+   - Brancos e neutros   fundos, "requisito que não e apenas estetico
                          mas funcional em uma interface operada por
-                         fixacao ocular"
+                         fixação ocular"
 
-   O tema padrao e claro, como manda o plano. As faixas escuras —
+   O tema padrão e claro, como manda o plano. As faixas escuras —
    hero, chamada final e rodape — recebem a classe .on-dark, que
    apenas redefine os mesmos tokens dentro daquela subarvore. Assim
    nenhum componente precisa saber em que fundo esta.
@@ -23,7 +23,7 @@
 }
 
 :root {
-  /* --- marca (fixas, nao mudam com o fundo) --- */
+  /* --- marca (fixas, não mudam com o fundo) --- */
   --blue: #1b54a8;
   --blue-700: #17458a;
   --blue-500: #2f66c2;
@@ -35,7 +35,7 @@
   --teal-600: #018476;
   --teal-300: #3fd6c2;
 
-  /* --- superficies: tema claro institucional --- */
+  /* --- superfícies: tema claro institucional --- */
   --bg: #ffffff;
   --bg-soft: #f2f6fc;
   --surface: #ffffff;
@@ -85,7 +85,7 @@
   --fs-body: 1.0625rem;
   --fs-sm: 0.95rem;
 
-  /* --- espacamento --- */
+  /* --- espaçamento --- */
   --sp-1: 0.25rem;
   --sp-2: 0.5rem;
   --sp-3: 0.75rem;
@@ -118,15 +118,15 @@
 }
 
 /* ============================================================
-   Modo escuro (preferencia do usuario).
+   Modo escuro (preferência do usuário).
 
-   O tema claro segue sendo o padrao. Quando data-theme="dark" esta
-   no <html>, as superficies e o texto do site inteiro passam para a
-   paleta escura — as mesmas cores ja usadas nas faixas .on-dark,
+   O tema claro segue sendo o padrão. Quando data-theme="dark" esta
+   no <html>, as superfícies e o texto do site inteiro passam para a
+   paleta escura — as mesmas cores já usadas nas faixas .on-dark,
    agora aplicadas a toda a arvore. As cores de marca continuam fixas.
 
-   Ao contrario das faixas .on-dark (que usam branco translucido sobre
-   um fundo escuro), aqui as superficies sao solidas: sobre uma pagina
+   Ao contrario das faixas .on-dark (que usam branco translúcido sobre
+   um fundo escuro), aqui as superfícies são solidas: sobre uma página
    escura, cartoes precisam de elevacao definida para se separarem do
    fundo.
    ============================================================ */
@@ -165,7 +165,7 @@
   --glow: 0 14px 40px rgba(27, 84, 168, 0.5);
 }
 
-/* A palavra destacada em titulos usa o mesmo gradiente das faixas escuras. */
+/* A palavra destacada em títulos usa o mesmo gradiente das faixas escuras. */
 :root[data-theme='dark'] .accent-text {
   background-image: linear-gradient(96deg, var(--blue-300), var(--teal-300));
   -webkit-background-clip: text;
@@ -173,7 +173,7 @@
   color: transparent;
 }
 
-/* Foco visivel: no escuro o azul institucional some no fundo; usa teal. */
+/* Foco visível: no escuro o azul institucional some no fundo; usa teal. */
 :root[data-theme='dark'] :focus-visible {
   outline-color: var(--teal-300);
 }

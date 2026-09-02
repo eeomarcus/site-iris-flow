@@ -10,9 +10,9 @@ export default function Acessibilidade() {
     <>
       <PageHead
         eyebrow="Acessibilidade"
-        title="Quatro principios que valem para todas as telas, sem excecao."
-        highlight={['sem', 'excecao.']}
-        lead="Nao sao recomendacoes: sao requisitos de projeto, aplicados tanto ao produto quanto a este site. Quem navega por fixacao nao dispoe da barra do sistema operacional como referencia, e a interface precisa compensar isso."
+        title="Quatro princípios que valem para todas as telas, sem exceção."
+        highlight={['sem', 'exceção.']}
+        lead="Não são recomendações: são requisitos de projeto, aplicados tanto ao produto quanto a este site. Quem navega por fixação não dispõe da barra do sistema operacional como referência, e a interface precisa compensar isso."
       />
 
       <section className="section">
@@ -43,30 +43,30 @@ export default function Acessibilidade() {
       <section className="section section--tight">
         <div className="container">
           <Reveal anim="fade">
-            <span className="eyebrow">O retorno em tres estagios</span>
+            <span className="eyebrow">O retorno em três estágios</span>
           </Reveal>
           <Reveal anim="up">
             <h2 style={{ maxWidth: '22ch', marginBottom: 'var(--sp-4)' }}>
-              Passe o cursor — ou use a tecla Tab — sobre os alvos abaixo.
+              Passe o cursor sobre os alvos abaixo, ou chegue até eles pela tecla Tab.
             </h2>
           </Reveal>
           <Reveal anim="up" delay={120}>
             <p className="lead" style={{ maxWidth: '70ch', marginBottom: 'var(--sp-6)' }}>
               Cada alvo mostra o contorno de destaque ao receber o olhar, muda de cor durante a
-              selecao e completa um aro de progresso ate confirmar. Compare os tres tempos de
-              fixacao que o produto oferece.
+              seleção e completa um aro de progresso até confirmar. Compare os três tempos de
+              fixação que o produto oferece.
             </p>
           </Reveal>
 
           <div className="grid grid--3">
             <Reveal anim="up" delay={100}>
-              <DwellTarget label="Rapido" dwellMs={800} hint="800 ms" />
+              <DwellTarget label="Rápido" dwellMs={800} hint="800 ms" />
             </Reveal>
             <Reveal anim="up" delay={200}>
-              <DwellTarget label="Padrao" dwellMs={1500} hint="1500 ms" />
+              <DwellTarget label="Padrão" dwellMs={1500} hint="1500 ms" />
             </Reveal>
             <Reveal anim="up" delay={300}>
-              <DwellTarget label="Confortavel" dwellMs={2500} hint="2500 ms" />
+              <DwellTarget label="Confortável" dwellMs={2500} hint="2500 ms" />
             </Reveal>
           </div>
 
@@ -81,9 +81,9 @@ export default function Acessibilidade() {
                 borderLeft: '2px solid var(--line)',
               }}
             >
-              O tempo padrao de 1500 ms mostrou-se adequado nos testes de usabilidade ja
-              realizados, mas a IrisFlow mantem as opcoes de 800 e 2500 ms porque o tempo ideal varia
-              com a fadiga e com o estagio da condicao.
+              O tempo padrão de 1500 ms se mostrou adequado nos testes de usabilidade já
+              realizados, mas a IrisFlow mantém as opções de 800 e 2500 ms porque o tempo ideal varia
+              com a fadiga e com o estágio da condição.
             </p>
           </Reveal>
         </div>
@@ -97,23 +97,23 @@ export default function Acessibilidade() {
           <Reveal anim="up" delay={120}>
             <ul style={{ fontSize: '1rem' }}>
               <li>Contraste elevado entre texto e fundo, sem texto essencial em corpo reduzido.</li>
-              <li>Foco visivel em todo elemento interativo, com contorno de tres pixels.</li>
-              <li>Navegacao completa por teclado, com atalho para pular direto ao conteudo.</li>
+              <li>Foco visível em todo elemento interativo, com contorno de três pixels.</li>
+              <li>Navegação completa por teclado, com atalho para pular direto ao conteúdo.</li>
               <li>
-                Todas as animacoes respeitam a preferencia de movimento reduzido do sistema
-                operacional — quando ela esta ativa, o site fica estatico.
+                Todas as animações respeitam a preferência de movimento reduzido do sistema
+                operacional. Quando ela está ativa, o site fica estático.
               </li>
-              <li>Marcacao semantica, com rotulos e regioes anunciados a leitores de tela.</li>
+              <li>Marcação semântica, com rótulos e regiões anunciados a leitores de tela.</li>
               <li>
-                Alvos de toque generosos, hierarquia visual explicita e nenhuma informacao
+                Alvos de toque generosos, hierarquia visual explícita e nenhuma informação
                 transmitida apenas por cor.
               </li>
             </ul>
           </Reveal>
           <Reveal anim="fade" delay={240}>
             <p style={{ fontSize: '0.95rem', color: 'var(--text-dim)' }}>
-              Encontrou uma barreira? Escreva para irisflowteam@gmail.com — corrigir acessibilidade
-              e prioridade acima de qualquer item de roteiro.
+              Encontrou uma barreira? Escreva para irisflowteam@gmail.com. Corrigir acessibilidade
+              é prioridade acima de qualquer item do roteiro.
             </p>
           </Reveal>
         </div>

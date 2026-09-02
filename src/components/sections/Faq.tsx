@@ -14,7 +14,7 @@ export function Faq() {
         </Reveal>
 
         <Reveal anim="up">
-          <h2 className="faq__title">O que as familias mais perguntam.</h2>
+          <h2 className="faq__title">O que as famílias mais perguntam.</h2>
         </Reveal>
 
         <ul className="faq__list">

@@ -2,11 +2,11 @@ import { useTheme } from '@/context/ThemeContext'
 import './theme-toggle.css'
 
 /**
- * Alterna entre tema claro e escuro. Herda a cor do cabecalho
- * (currentColor), entao funciona tanto sobre a faixa escura do topo
- * quanto sobre o cabecalho claro apos a rolagem. Os dois icones ficam
- * empilhados e trocam por opacidade/rotacao — a transicao acompanha a
- * mudanca de tema sem saltos de layout.
+ * Alterna entre tema claro e escuro. Herda a cor do cabeçalho
+ * (currentColor), então funciona tanto sobre a faixa escura do topo
+ * quanto sobre o cabeçalho claro depois da rolagem. Os dois ícones ficam
+ * empilhados e trocam por opacidade e rotação, para que a transição
+ * acompanhe a mudança de tema sem saltos de layout.
  */
 export function ThemeToggle({ full = false }: { full?: boolean }) {
   const { isDark, toggle } = useTheme()
@@ -22,7 +22,7 @@ export function ThemeToggle({ full = false }: { full?: boolean }) {
       title={isDark ? 'Modo claro' : 'Modo escuro'}
     >
       <span className="theme-toggle__icons" aria-hidden="true">
-        {/* sol — visivel no modo escuro (oferece voltar ao claro) */}
+        {/* sol: visível no modo escuro, para oferecer a volta ao claro */}
         <svg
           className="theme-toggle__sun"
           viewBox="0 0 24 24"
@@ -37,7 +37,7 @@ export function ThemeToggle({ full = false }: { full?: boolean }) {
           <circle cx="12" cy="12" r="4" />
           <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
         </svg>
-        {/* lua — visivel no modo claro (oferece ir ao escuro) */}
+        {/* lua: visível no modo claro, para oferecer a ida ao escuro */}
         <svg
           className="theme-toggle__moon"
           viewBox="0 0 24 24"

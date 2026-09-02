@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 
 type Options = {
-  /** Fracao do elemento visivel para disparar. */
+  /** Fração do elemento visível para disparar. */
   threshold?: number
-  /** Margem do observador — negativa adia o disparo. */
+  /** Margem do observador. Negativa adia o disparo. */
   rootMargin?: string
-  /** Dispara uma unica vez e para de observar. */
+  /** Dispara uma única vez e para de observar. */
   once?: boolean
 }
 
 /**
  * Observa a entrada do elemento na viewport.
- * Base de todos os reveals de scrollytelling do site.
+ * Base de todas as entradas em cena do site.
  */
 export function useInView<T extends HTMLElement = HTMLDivElement>({
   threshold = 0.18,

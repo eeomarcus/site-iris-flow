@@ -16,7 +16,7 @@ export function ProblemSection() {
         <AnimatedHeadline
           text={PROBLEM.title}
           as="h2"
-          highlight={['preco']}
+          highlight={['preço']}
           className="problem__title"
         />
 

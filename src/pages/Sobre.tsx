@@ -6,9 +6,9 @@ import { Logo } from '@/components/layout/Logo'
 import { VALUES, ROADMAP, BRAND } from '@/data/content'
 
 const ROLES: Record<string, string> = {
-  Concluido: 'tag--ok',
-  'Em realizacao': 'tag--wip',
-  'Proxima tarefa': 'tag--wip',
+  'Concluído': 'tag--ok',
+  'Em realização': 'tag--wip',
+  'Próxima tarefa': 'tag--wip',
   Pendente: 'tag--neutral',
 }
 
@@ -17,9 +17,9 @@ export default function Sobre() {
     <>
       <PageHead
         eyebrow="A empresa"
-        title="A IrisFlow existe porque a barreira e economica, e nao tecnologica."
-        highlight={['economica,']}
-        lead="Somos uma startup de tecnologia assistiva com uma equipe pequena e uma restricao autoimposta que definiu toda a arquitetura do produto: funcionar na webcam que a pessoa ja tem, sem hardware dedicado."
+        title="A IrisFlow existe porque a barreira é econômica antes de ser tecnológica."
+        highlight={['econômica']}
+        lead="Somos uma startup de tecnologia assistiva com uma equipe pequena e uma restrição autoimposta que definiu toda a arquitetura do produto: funcionar na webcam que a pessoa já tem, sem hardware dedicado."
       />
 
       <section className="section">
@@ -29,12 +29,12 @@ export default function Sobre() {
           </Reveal>
           <Reveal anim="up">
             <h2 style={{ maxWidth: '26ch', marginBottom: 'var(--sp-4)' }}>
-              Cada valor aqui corresponde a uma decisao de produto ja tomada.
+              Cada valor aqui corresponde a uma decisão de produto já tomada.
             </h2>
           </Reveal>
           <Reveal anim="up" delay={120}>
             <p className="lead" style={{ maxWidth: '70ch', marginBottom: 'var(--sp-7)' }}>
-              Nao sao declaracoes genericas — sao verificaveis no codigo e nas telas.
+              Não são declarações genéricas: dá para conferir cada uma no código e nas telas.
             </p>
           </Reveal>
 
@@ -54,11 +54,11 @@ export default function Sobre() {
       <section className="section">
         <div className="container">
           <Reveal anim="fade">
-            <span className="eyebrow">Estagio do projeto</span>
+            <span className="eyebrow">Estágio do projeto</span>
           </Reveal>
           <Reveal anim="up">
             <h2 style={{ maxWidth: '24ch', marginBottom: 'var(--sp-6)' }}>
-              O que ja esta pronto, o que esta em construcao e o que ainda falta.
+              O que já está pronto, o que está em construção e o que ainda falta.
             </h2>
           </Reveal>
 
@@ -97,8 +97,8 @@ export default function Sobre() {
               <Logo variant="full" size="lg" link={false} />
               <h2 style={{ maxWidth: '20ch' }}>{BRAND.tagline}</h2>
               <p className="lead" style={{ maxWidth: '58ch' }}>
-                O codigo do produto, o protocolo de medicao e a documentacao tecnica permanecem
-                publicos, em coerencia com o compromisso de auditabilidade declarado na politica de
+                O código do produto, o protocolo de medição e a documentação técnica permanecem
+                públicos, em coerência com o compromisso de auditabilidade declarado na política de
                 privacidade.
               </p>
               <a
@@ -108,7 +108,7 @@ export default function Sobre() {
                 className="underline-grow"
                 style={{ color: 'var(--ok)', fontWeight: 600 }}
               >
-                Ver o repositorio do produto
+                Ver o repositório do produto
               </a>
             </div>
           </Reveal>

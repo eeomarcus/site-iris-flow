@@ -3,7 +3,7 @@ import { COMPARISON } from '@/data/content'
 import './comparison.css'
 
 const cellClass = (v: string) =>
-  v === 'sim' ? 'is-yes' : v === 'nao' ? 'is-no' : v === 'parcial' ? 'is-partial' : ''
+  v === 'sim' ? 'is-yes' : v === 'não' ? 'is-no' : v === 'parcial' ? 'is-partial' : ''
 
 function Cell({ value }: { value: string }) {
   if (value === 'sim') {
@@ -22,9 +22,9 @@ function Cell({ value }: { value: string }) {
       </span>
     )
   }
-  if (value === 'nao') {
+  if (value === 'não') {
     return (
-      <span className="cmp__mark cmp__mark--no" aria-label="nao">
+      <span className="cmp__mark cmp__mark--no" aria-label="não">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M6 6l12 12M18 6 6 18"
@@ -50,7 +50,7 @@ export function Comparison() {
 
         <Reveal anim="up">
           <h2 className="comparison__title">
-            Onde a IrisFlow ganha — <span className="gradient-text">e onde ele perde</span>.
+            Onde a IrisFlow ganha <span className="gradient-text">e onde ela perde</span>.
           </h2>
         </Reveal>
 
@@ -58,12 +58,12 @@ export function Comparison() {
           <div className="cmp__wrap">
             <table className="cmp">
               <caption className="sr-only">
-                Comparacao entre a IrisFlow, sistemas de rastreamento ocular dedicados e aplicativos
-                de comunicacao por piscada
+                Comparação entre a IrisFlow, sistemas de rastreamento ocular dedicados e aplicativos
+                de comunicação por piscada
               </caption>
               <thead>
                 <tr>
-                  <th scope="col">Criterio</th>
+                  <th scope="col">Critério</th>
                   {COMPARISON.columns.map((c, i) => (
                     <th scope="col" key={c} className={i === 0 ? 'is-ours' : ''}>
                       {c}

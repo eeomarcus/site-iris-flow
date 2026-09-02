@@ -2,13 +2,13 @@ import { Link } from 'react-router-dom'
 import './logo.css'
 
 type Props = {
-  /** `full` traz simbolo e assinatura; `symbol` traz so a iris. */
+  /** `full` traz símbolo e assinatura; `symbol` traz só a íris. */
   variant?: 'full' | 'symbol'
-  /** `negativo` e a versao para fundo escuro, com a assinatura em branco. */
+  /** `negativo` é a versão para fundo escuro, com a assinatura em branco. */
   tone?: 'positivo' | 'negativo'
   /** Altura da marca. */
   size?: 'sm' | 'md' | 'lg' | 'xl'
-  /** Quando falso, renderiza sem link (util dentro de um cabecalho ja linkado). */
+  /** Quando falso, renderiza sem link (útil dentro de um cabeçalho já linkado). */
   link?: boolean
   className?: string
 }
@@ -26,7 +26,7 @@ const FILES = {
 
 /**
  * Marca da IrisFlow, a partir dos arquivos oficiais.
- * A versao em negativo foi derivada da original para uso sobre fundo
+ * A versão em negativo foi derivada da original para uso sobre fundo
  * escuro: a assinatura em azul-marinho desapareceria ali.
  */
 export function Logo({
@@ -53,16 +53,16 @@ export function Logo({
   }
 
   return (
-    <Link to="/" className={cls} aria-label="IrisFlow, pagina inicial">
+    <Link to="/" className={cls} aria-label="IrisFlow, página inicial">
       {img}
     </Link>
   )
 }
 
 /**
- * O simbolo da iris como elemento grafico: recebe um halo que pulsa e
- * anéis concentricos que se expandem, sem nada desenhado por cima da
- * marca. Serve de ancora visual onde antes havia uma ilustracao.
+ * O símbolo da íris como elemento gráfico: recebe um halo que pulsa e
+ * anéis concêntricos que se expandem, sem nada desenhado por cima da
+ * marca. Serve de âncora visual onde antes havia uma ilustração.
  */
 export function IrisMark({
   size = 200,

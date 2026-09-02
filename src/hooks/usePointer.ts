@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 export type Pointer = { x: number; y: number; nx: number; ny: number }
 
 /**
- * Posicao do ponteiro em pixels e normalizada (-1 a 1).
+ * Posição do ponteiro em pixels e normalizada (-1 a 1).
  * Alimenta o olho que acompanha o cursor no hero e os efeitos de parallax.
  */
 export function usePointer(): Pointer {

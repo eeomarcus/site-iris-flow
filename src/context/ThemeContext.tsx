@@ -11,12 +11,12 @@ import {
 /* ============================================================
    Tema claro / escuro.
 
-   O tema padrao do produto e claro (topico 2.3 do plano). O modo
-   escuro e uma preferencia do usuario: escolha manual manda; na
-   ausencia dela, seguimos a preferencia do sistema operacional.
+   O tema padrão do produto é claro (tópico 2.3 do plano). O modo
+   escuro é uma preferência do usuário: a escolha manual manda e, na
+   ausência dela, seguimos a preferência do sistema operacional.
 
-   A fonte da verdade e o atributo data-theme no <html>, definido
-   antes da pintura por um script inline em index.html — sem isso
+   A fonte da verdade é o atributo data-theme no <html>, definido
+   antes da pintura por um script inline em index.html. Sem isso
    haveria um lampejo de tema claro ao carregar. Aqui apenas
    sincronizamos o estado do React com esse atributo.
    ============================================================ */
@@ -40,7 +40,7 @@ type Ctx = {
 
 const ThemeContext = createContext<Ctx | null>(null)
 
-/** Le o tema ja aplicado no <html> pelo script inline; cai para claro. */
+/** Lê o tema já aplicado no <html> pelo script inline; na dúvida, claro. */
 function readInitial(): Theme {
   if (typeof document !== 'undefined') {
     const attr = document.documentElement.dataset.theme
@@ -60,11 +60,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, theme)
     } catch {
-      /* modo privado ou cota — ignorado de proposito */
+      /* modo privado ou cota excedida: ignorado de propósito */
     }
   }, [theme])
 
-  // Enquanto o usuario nao escolheu manualmente, acompanha o sistema.
+  // Enquanto o usuário não escolheu manualmente, acompanha o sistema.
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     const onChange = (e: MediaQueryListEvent) => {

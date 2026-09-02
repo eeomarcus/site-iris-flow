@@ -168,14 +168,14 @@
     color var(--dur) var(--ease-out);
 }
 
-/* estagio 1 — contorno de destaque */
+/* estágio 1 — contorno de destaque */
 .demo__key:hover,
 .demo__key:focus-visible {
   border-color: var(--accent);
   transform: translateY(-2px);
 }
 
-/* estagio 2 e 3 — cor e preenchimento de progresso */
+/* estágio 2 e 3 — cor e preenchimento de progresso */
 .demo__key.is-active {
   border-color: var(--teal);
   color: #fff;

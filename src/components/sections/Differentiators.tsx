@@ -1,6 +1,7 @@
 import { AnimatedHeadline } from '@/components/effects/AnimatedHeadline'
 import { Reveal } from '@/components/effects/Reveal'
 import { Card, CardIcon } from '@/components/ui/Card'
+import { Icon } from '@/components/ui/Icon'
 import { DIFFERENTIATORS } from '@/data/content'
 import './differentiators.css'
 
@@ -13,16 +14,16 @@ export function Differentiators() {
         </Reveal>
 
         <AnimatedHeadline
-          text="Rastreamento por webcam nao e novidade. A diferenca esta em seis decisoes medidas."
+          text="Rastreamento por webcam não é novidade. A diferença está em seis decisões medidas."
           as="h2"
-          highlight={['seis', 'decisoes', 'medidas.']}
+          highlight={['seis', 'decisões', 'medidas.']}
           className="differentiators__title"
         />
 
         <Reveal anim="up" delay={140}>
           <p className="lead differentiators__lead">
-            Cada uma das decisoes abaixo existe porque foi medida, e o conjunto delas e o que
-            produz a diferenca de erro. E tambem o ativo proprietario da empresa.
+            Cada decisão abaixo entrou no produto depois de ser medida, e é o conjunto delas que
+            produz a diferença de erro. Esse conjunto é o ativo proprietário da empresa.
           </p>
         </Reveal>
 
@@ -30,7 +31,9 @@ export function Differentiators() {
           {DIFFERENTIATORS.map((d, i) => (
             <Reveal key={d.title} anim="up" delay={i * 90} as="li">
               <Card as="div">
-                <CardIcon tone={i % 2 === 0 ? 'blue' : 'teal'}>{d.icon}</CardIcon>
+                <CardIcon tone={i % 2 === 0 ? 'blue' : 'teal'}>
+                  <Icon name={d.icon} size={26} />
+                </CardIcon>
                 <h3>{d.title}</h3>
                 <p>{d.text}</p>
               </Card>

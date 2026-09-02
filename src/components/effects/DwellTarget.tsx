@@ -3,22 +3,22 @@ import './dwell.css'
 
 type Props = {
   label: string
-  /** Tempo de fixacao em ms — o produto usa 800 / 1500 / 2500. */
+  /** Tempo de fixação em ms. O produto oferece 800, 1500 e 2500. */
   dwellMs?: number
   onSelect?: () => void
   hint?: string
 }
 
 /**
- * Alvo com selecao por fixacao (dwell), reproduzindo no navegador
- * o retorno visual em tres estagios descrito no plano:
+ * Alvo com seleção por fixação, reproduzindo no navegador o retorno
+ * visual em três estágios descrito no plano:
  *   1. contorno de destaque ao entrar no alvo
- *   2. mudanca de cor indicando selecao em progresso
- *   3. barra/aro de progresso ate a confirmacao
- * Seguido de periodo refratario de 800 ms, como no produto.
+ *   2. mudança de cor indicando seleção em progresso
+ *   3. aro de progresso até a confirmação
+ * Depois vem o período refratário de 800 ms, como no produto.
  *
- * Aqui o gatilho e o cursor ou o foco de teclado; na IrisFlow real
- * o gatilho e o olhar estimado pela webcam.
+ * Aqui o gatilho é o cursor ou o foco de teclado. Na IrisFlow real, é o
+ * olhar estimado pela webcam.
  */
 export function DwellTarget({ label, dwellMs = 1500, onSelect, hint }: Props) {
   const [stage, setStage] = useState<'idle' | 'hover' | 'active' | 'done' | 'cooldown'>('idle')
@@ -38,7 +38,7 @@ export function DwellTarget({ label, dwellMs = 1500, onSelect, hint }: Props) {
     timer.current = window.setTimeout(() => {
       setStage('done')
       onSelect?.()
-      // periodo refratario de 800 ms: impede reativacao imediata do mesmo alvo
+      // período refratário de 800 ms: impede reativação imediata do mesmo alvo
       cooldown.current = window.setTimeout(() => setStage('idle'), 800)
     }, dwellMs)
   }

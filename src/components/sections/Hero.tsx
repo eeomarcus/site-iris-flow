@@ -21,8 +21,8 @@ export function Hero() {
           <p className="hero__tagline">Seu olhar tem voz.</p>
         </Reveal>
 
-        {/* Uma janela por linha: cada mascara revela exatamente uma linha,
-            entao o texto e quebrado a mao em vez de deixado ao acaso. */}
+        {/* Uma janela por linha: cada máscara revela exatamente uma linha,
+            então o texto é quebrado à mão em vez de deixado ao acaso. */}
         <h1 className="hero__title">
           <span className="hero__title-mask">
             <span className="hero__title-line" style={{ animationDelay: '420ms' }}>
@@ -43,9 +43,9 @@ export function Hero() {
 
         <Reveal anim="up" delay={700}>
           <p className="lead hero__lead">
-            A IrisFlow transforma o movimento dos olhos em comunicacao e em controle do computador
-            usando apenas a webcam que a pessoa ja tem em casa. Sem equipamento de dezenas de
-            milhares de reais. Sem enviar uma unica imagem para a internet.
+            A IrisFlow transforma o movimento dos olhos em comunicação e em controle do computador
+            usando apenas a webcam que a pessoa já tem em casa. Sem equipamento de dezenas de
+            milhares de reais. Sem enviar uma única imagem para a internet.
           </p>
         </Reveal>
 
@@ -61,7 +61,7 @@ export function Hero() {
         <Reveal anim="up" delay={920}>
           <div className="hero__actions">
             <Button to="/cadastro" size="lg">
-              Testar gratis por {PLAN.trialDays} dias
+              Testar grátis por {PLAN.trialDays} dias
             </Button>
             <Button to="/como-funciona" variant="secondary" size="lg">
               Ver como funciona
@@ -71,7 +71,7 @@ export function Hero() {
 
         <Reveal anim="fade" delay={1040}>
           <p className="hero__fine">
-            Sem cartao para comecar · Sem fidelidade · R$ {PLAN.price} por mes depois da avaliacao ·{' '}
+            Sem cartão para começar · Sem fidelidade · R$ {PLAN.price} por mês depois da avaliação ·{' '}
             <Link to="/planos" className="underline-grow">
               ver o plano
             </Link>

@@ -1,5 +1,6 @@
 import { Counter } from '@/components/effects/Counter'
 import { Reveal } from '@/components/effects/Reveal'
+import { Icon } from '@/components/ui/Icon'
 import { METRICS, METRICS_CAVEAT } from '@/data/content'
 import './metrics.css'
 
@@ -13,7 +14,7 @@ export function Metrics() {
 
         <Reveal anim="up">
           <h2 className="metrics__title">
-            Publicamos o numero <span className="gradient-text">e a condicao</span> em que ele foi
+            Publicamos o número <span className="gradient-text">e a condição</span> em que ele foi
             obtido.
           </h2>
         </Reveal>
@@ -33,8 +34,8 @@ export function Metrics() {
 
         <Reveal anim="fade" delay={420}>
           <div className="metrics__caveat">
-            <span className="metrics__caveat-mark" aria-hidden="true">
-              !
+            <span className="metrics__caveat-mark">
+              <Icon name="alerta" size={20} />
             </span>
             <p>{METRICS_CAVEAT}</p>
           </div>

@@ -12,8 +12,8 @@
     color var(--dur) var(--ease-out);
 }
 
-/* Sobre o hero escuro o cabecalho e transparente e usa a marca em
-   negativo; ao rolar, ele encosta no conteudo claro e se inverte. */
+/* Sobre o hero escuro o cabeçalho e transparente e usa a marca em
+   negativo; ao rolar, ele encosta no conteúdo claro e se inverte. */
 .header:not(.is-scrolled) {
   color: #f2f6fd;
 }
@@ -26,7 +26,7 @@
   color: var(--text);
 }
 
-/* No modo escuro o vidro claro do cabecalho rolado vira vidro escuro. */
+/* No modo escuro o vidro claro do cabeçalho rolado vira vidro escuro. */
 [data-theme='dark'] .header.is-scrolled {
   background: rgba(6, 18, 35, 0.82);
 }
@@ -82,7 +82,7 @@
   font-size: 0.94rem;
 }
 
-/* Enquanto o cabecalho esta sobre o hero escuro, o botao secundario
+/* Enquanto o cabeçalho esta sobre o hero escuro, o botão secundario
    precisa da variante clara. */
 .header:not(.is-scrolled) .btn--ghost {
   color: #dce6f6;

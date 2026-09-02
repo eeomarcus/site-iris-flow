@@ -25,8 +25,8 @@ type AnchorProps = Common & { href: string; to?: undefined }
 type Props = ButtonProps | LinkProps | AnchorProps
 
 /**
- * Botao com brilho que segue o ponteiro (microinteracao, efeito 12 e 26)
- * e resposta tatil ao pressionar.
+ * Botão com brilho que acompanha o ponteiro e resposta tátil ao
+ * pressionar.
  */
 export function Button(props: Props) {
   const {

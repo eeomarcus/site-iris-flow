@@ -4,7 +4,7 @@
 .flow {
   position: relative;
   min-height: 100vh;
-  /* O cabecalho e fixo e flutua sobre o conteudo. */
+  /* O cabeçalho e fixo e flutua sobre o conteúdo. */
   padding-block: calc(var(--header-h) + var(--sp-6)) var(--sp-9);
   overflow: hidden;
 }
@@ -183,7 +183,7 @@
 }
 
 .method__icon {
-  font-size: 1.3rem;
+  margin-bottom: 2px;
   color: var(--ok);
 }
 
@@ -197,7 +197,7 @@
   color: var(--text-dim);
 }
 
-/* --- cartao visual --- */
+/* --- cartão visual --- */
 .creditcard {
   position: relative;
   overflow: hidden;
@@ -330,7 +330,7 @@
 
 .notice__icon {
   flex: none;
-  font-size: 1.1rem;
+  margin-top: 1px;
   color: var(--accent);
 }
 

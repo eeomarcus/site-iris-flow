@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 /**
  * Contador animado com easing, disparado quando `active` vira true.
- * Usado nos indicadores tecnicos e de mercado.
+ * Usado nos indicadores técnicos e de mercado.
  */
 export function useCountUp(target: number, active: boolean, duration = 1500, decimals = 0) {
   const [value, setValue] = useState(0)

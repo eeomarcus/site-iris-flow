@@ -6,7 +6,6 @@ import { Field } from '@/components/ui/Field'
 import { Button } from '@/components/ui/Button'
 import { useAccount } from '@/context/AccountContext'
 import { isEmail } from '@/utils/format'
-import { fakeDelay } from '@/services/api'
 import './checkout.css'
 
 export default function Entrar() {
@@ -14,7 +13,7 @@ export default function Entrar() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const { signIn, account } = useAccount()
+  const { signIn } = useAccount()
   const navigate = useNavigate()
 
   const submit = async (e: FormEvent) => {
@@ -22,7 +21,7 @@ export default function Entrar() {
     setError(null)
 
     if (!isEmail(email)) {
-      setError('Informe um e-mail valido.')
+      setError('Informe um e-mail válido.')
       return
     }
     if (password.length < 6) {
@@ -31,19 +30,13 @@ export default function Entrar() {
     }
 
     setLoading(true)
-    // Sem back-end e sem banco: a "autenticacao" apenas confere o e-mail
-    // contra a conta guardada em localStorage nesta sessao.
-    await fakeDelay(800)
-    setLoading(false)
-
-    if (signIn(email)) {
+    try {
+      await signIn(email, password)
       navigate('/conta')
-    } else {
-      setError(
-        account
-          ? 'Esse e-mail nao corresponde a conta criada neste navegador.'
-          : 'Nenhuma conta encontrada neste navegador. Crie uma para comecar a avaliacao.',
-      )
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Não foi possível entrar.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -62,22 +55,6 @@ export default function Entrar() {
 
         <Reveal anim="up" delay={140}>
           <div className="flow__card panel">
-            <div className="notice">
-              <span className="notice__icon" aria-hidden="true">
-                ⓘ
-              </span>
-              <p>
-                Sem banco de dados, o acesso funciona apenas com a conta criada neste navegador.
-                {account && (
-                  <>
-                    {' '}
-                    Use <strong>{account.profile.email}</strong> e qualquer senha com 6 ou mais
-                    caracteres.
-                  </>
-                )}
-              </p>
-            </div>
-
             <form onSubmit={submit} noValidate>
               <Field
                 label="E-mail"
@@ -104,9 +81,9 @@ export default function Entrar() {
             </form>
 
             <p className="flow__foot" style={{ marginBottom: 0 }}>
-              Ainda nao tem conta?{' '}
+              Ainda não tem conta?{' '}
               <Link to="/cadastro" className="underline-grow" style={{ color: 'var(--ok)' }}>
-                Comecar a avaliacao gratuita
+                Começar a avaliação gratuita
               </Link>
             </p>
           </div>

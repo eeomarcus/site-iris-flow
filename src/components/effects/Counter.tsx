@@ -9,7 +9,7 @@ type Props = {
   duration?: number
 }
 
-/** Numero que conta ate o valor final quando entra na viewport. */
+/** Número que conta até o valor final quando entra na viewport. */
 export function Counter({ value, decimals = 0, prefix = '', suffix = '', duration = 1600 }: Props) {
   const { ref, inView } = useInView<HTMLSpanElement>({ threshold: 0.5 })
   const n = useCountUp(value, inView, duration, decimals)

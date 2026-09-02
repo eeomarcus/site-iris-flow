@@ -1,6 +1,7 @@
 import { AnimatedHeadline } from '@/components/effects/AnimatedHeadline'
 import { Reveal } from '@/components/effects/Reveal'
 import { Card, CardIcon } from '@/components/ui/Card'
+import { Icon } from '@/components/ui/Icon'
 import { MODULES } from '@/data/content'
 import './modules.css'
 
@@ -15,7 +16,7 @@ export function Modules({ limit }: { limit?: number }) {
         </Reveal>
 
         <AnimatedHeadline
-          text="Nao e um cursor controlado pelo olhar. E um ambiente inteiro."
+          text="Não é um cursor controlado pelo olhar. É um ambiente inteiro."
           as="h2"
           highlight={['ambiente', 'inteiro.']}
           className="modules__title"
@@ -23,10 +24,10 @@ export function Modules({ limit }: { limit?: number }) {
 
         <Reveal anim="up" delay={140}>
           <p className="lead modules__lead">
-            O rastreamento e a camada de entrada. Sobre ela foram construidos ambientes completos
-            de comunicacao, controle do sistema, lazer terapeutico, acompanhamento pelo cuidador e
-            resposta a emergencias — todos operados por fixacao, com poucos alvos grandes e bem
-            espacados.
+            O rastreamento é a camada de entrada. Sobre ela foram construídos ambientes completos
+            de comunicação, controle do sistema, lazer terapêutico, acompanhamento pelo cuidador e
+            resposta a emergências, todos operados por fixação, com poucos alvos grandes e bem
+            espaçados.
           </p>
         </Reveal>
 
@@ -34,7 +35,9 @@ export function Modules({ limit }: { limit?: number }) {
           {list.map((m, i) => (
             <Reveal key={m.name} anim="up" delay={i * 80} as="li" className="modules__item">
               <Card as="div">
-                <CardIcon tone={m.state === 'Implementado' ? 'blue' : 'teal'}>{m.icon}</CardIcon>
+                <CardIcon tone={m.state === 'Implementado' ? 'blue' : 'teal'}>
+                  <Icon name={m.icon} size={26} />
+                </CardIcon>
                 <h3>{m.name}</h3>
                 <p>{m.description}</p>
                 <span className={`tag ${m.state === 'Implementado' ? 'tag--ok' : 'tag--wip'}`}>

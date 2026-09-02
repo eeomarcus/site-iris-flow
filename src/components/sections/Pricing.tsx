@@ -1,5 +1,6 @@
 import { Reveal } from '@/components/effects/Reveal'
 import { Button } from '@/components/ui/Button'
+import { Icon } from '@/components/ui/Icon'
 import { PLAN } from '@/data/content'
 import './pricing.css'
 
@@ -13,7 +14,7 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
 
         <Reveal anim="up">
           <h2 className="pricing__title">
-            Uma assinatura. <span className="gradient-text">Tudo incluido.</span>
+            Uma assinatura. <span className="gradient-text">Tudo incluído.</span>
           </h2>
         </Reveal>
 
@@ -24,7 +25,7 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
         <div className="pricing__layout">
           <Reveal anim="zoom" delay={180}>
             <div className="plan panel">
-              <span className="plan__ribbon">{PLAN.trialDays} dias gratis</span>
+              <span className="plan__ribbon">{PLAN.trialDays} dias grátis</span>
 
               <header className="plan__head">
                 <h3 className="plan__name">{PLAN.name}</h3>
@@ -34,8 +35,8 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
                   <span className="plan__period">{PLAN.period}</span>
                 </p>
                 <p className="plan__sub">
-                  Sem taxa de adesao, sem fidelidade e sem compra de equipamento. A primeira
-                  cobranca so acontece depois dos {PLAN.trialDays} dias de avaliacao.
+                  Sem taxa de adesão, sem fidelidade e sem compra de equipamento. A primeira
+                  cobrança só acontece depois dos {PLAN.trialDays} dias de avaliação.
                 </p>
               </header>
 
@@ -60,10 +61,10 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
               </ul>
 
               <Button to="/cadastro" size="lg" full>
-                Comecar avaliacao gratuita
+                Começar avaliação gratuita
               </Button>
               <p className="plan__fine">
-                Nao pedimos cartao para comecar. Voce so informa a forma de pagamento se decidir
+                Não pedimos cartão para começar. Você só informa a forma de pagamento se decidir
                 continuar.
               </p>
             </div>
@@ -73,8 +74,8 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
             {PLAN.guarantees.map((g, i) => (
               <Reveal key={g.title} anim="left" delay={240 + i * 110}>
                 <div className="guarantee">
-                  <span className="guarantee__icon" aria-hidden="true">
-                    {g.icon}
+                  <span className="guarantee__icon">
+                    <Icon name={g.icon} size={24} />
                   </span>
                   <div>
                     <h3>{g.title}</h3>
@@ -87,8 +88,8 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
             <Reveal anim="left" delay={580}>
               <div className="guarantee guarantee--note">
                 <p>
-                  Para clinicas, associacoes de pacientes e profissionais prescritores, o acesso
-                  durante o programa de validacao e gratuito.{' '}
+                  Para clínicas, associações de pacientes e profissionais prescritores, o acesso
+                  durante o programa de validação é gratuito.{' '}
                   <a href="/contato#validacao" className="underline-grow">
                     Fale com a equipe
                   </a>

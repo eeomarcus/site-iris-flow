@@ -12,5 +12,9 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    // Escuta em todas as interfaces, e não só em localhost, para que o
+    // site possa ser aberto de outro aparelho na mesma rede — o celular,
+    // ou a máquina de quem está assistindo à demonstração.
+    host: true,
   },
 })

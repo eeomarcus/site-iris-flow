@@ -35,7 +35,7 @@ export default function NotFound() {
 
         <Reveal anim="up" delay={280}>
           <p className="lead" style={{ maxWidth: '46ch', marginInline: 'auto' }}>
-            Procuramos, mas essa pagina nao esta em lugar nenhum da tela.
+            Procuramos, mas essa página não está em lugar nenhum da tela.
           </p>
         </Reveal>
 
@@ -49,7 +49,7 @@ export default function NotFound() {
               marginTop: 'var(--sp-5)',
             }}
           >
-            <Button to="/">Voltar ao inicio</Button>
+            <Button to="/">Voltar ao início</Button>
             <Button to="/contato" variant="secondary">
               Falar com a equipe
             </Button>

@@ -5,8 +5,8 @@
   background: var(--bg);
 }
 
-/* Faixa escura de abertura das paginas internas. Ocupa a area sob o
-   cabecalho fixo, por isso o padding-top inclui a altura dele. */
+/* Faixa escura de abertura das páginas internas. Ocupa a área sob o
+   cabeçalho fixo, por isso o padding-top inclui a altura dele. */
 .page-head {
   position: relative;
   overflow: hidden;

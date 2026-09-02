@@ -1,6 +1,6 @@
-/* Movimento ambiente de fundo. Os tons sao calibrados para a faixa
+/* Movimento ambiente de fundo. Os tons são calibrados para a faixa
    escura; em fundo claro o componente entra com opacidade bem menor,
-   para nao competir com o texto. */
+   para não competir com o texto. */
 
 .ambient {
   position: absolute;
@@ -69,7 +69,7 @@
   -webkit-mask-image: radial-gradient(ellipse 78% 62% at 50% 42%, #000 25%, transparent 78%);
 }
 
-/* Linha de varredura — alusao ao scan continuo da webcam. */
+/* Linha de varredura — alusão ao scan contínuo da webcam. */
 .ambient__scan {
   position: absolute;
   left: 0;

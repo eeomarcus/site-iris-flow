@@ -11,7 +11,7 @@ type Base = {
 
 type InputProps = Base & InputHTMLAttributes<HTMLInputElement>
 
-/** Campo de texto com rotulo persistente, dica e erro anunciado a leitores de tela. */
+/** Campo de texto com rótulo persistente, dica e erro anunciado a leitores de tela. */
 export function Field({ label, error, hint, icon, className = '', ...rest }: InputProps) {
   const id = useId()
   const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-err` : null]

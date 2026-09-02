@@ -6,7 +6,7 @@ type Props = {
   text: string
   as?: ElementType
   className?: string
-  /** Palavras destacadas com o gradiente da marca (comparacao sem acento e sem caixa). */
+  /** Palavras destacadas com o gradiente da marca (a comparação ignora acento e caixa). */
   highlight?: string[]
   /** Atraso entre palavras, em ms. */
   stagger?: number
@@ -21,8 +21,8 @@ const norm = (s: string) =>
     .toLowerCase()
 
 /**
- * Tipografia expressiva: cada palavra sobe para o lugar quando o titulo
- * entra na viewport. Efeito 4 do catalogo da SVGator.
+ * Cada palavra do título sobe para o lugar quando ele entra na viewport.
+ * As palavras marcadas em `highlight` recebem o gradiente da marca.
  */
 export function AnimatedHeadline({
   text,

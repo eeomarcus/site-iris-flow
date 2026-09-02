@@ -6,8 +6,8 @@ type Props = {
 }
 
 /**
- * Trilha de contexto: indica permanentemente em que etapa o usuario esta.
- * E o quarto principio de acessibilidade do produto, aplicado ao site.
+ * Trilha de contexto: indica permanentemente em que etapa o usuário está.
+ * É o quarto princípio de acessibilidade do produto, aplicado ao site.
  */
 export function Stepper({ steps, current }: Props) {
   return (

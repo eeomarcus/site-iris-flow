@@ -6,7 +6,7 @@ type Props = {
   reverse?: boolean
 }
 
-/** Faixa em rolagem continua. Microanimacao ambiente para provas e rotulos. */
+/** Faixa em rolagem contínua, usada para os rótulos curtos do produto. */
 export function Marquee({ items, speed = 38, reverse = false }: Props) {
   const doubled = [...items, ...items]
 
@@ -22,7 +22,7 @@ export function Marquee({ items, speed = 38, reverse = false }: Props) {
         {doubled.map((item, i) => (
           <span className="marquee__item" key={i}>
             {item}
-            <span className="marquee__sep">◆</span>
+            <span className="marquee__sep" />
           </span>
         ))}
       </div>

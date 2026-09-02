@@ -4,8 +4,9 @@ import { Reveal } from '@/components/effects/Reveal'
 import { Field, SelectField } from '@/components/ui/Field'
 import { Button } from '@/components/ui/Button'
 import { Card, CardIcon } from '@/components/ui/Card'
+import { Icon } from '@/components/ui/Icon'
 import { isEmail } from '@/utils/format'
-import { fakeDelay } from '@/services/api'
+import { sendContactMessage } from '@/services/api'
 import { BRAND } from '@/data/content'
 
 type Form = { name: string; email: string; role: string; message: string }
@@ -16,6 +17,7 @@ export default function Contato() {
   const [errors, setErrors] = useState<Errors>({})
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
+  const [falha, setFalha] = useState<string | null>(null)
 
   const set = (key: keyof Form) => (e: { target: { value: string } }) => {
     setForm((f) => ({ ...f, [key]: e.target.value }))
@@ -25,9 +27,9 @@ export default function Contato() {
   const validate = () => {
     const next: Errors = {}
     if (form.name.trim().length < 3) next.name = 'Informe seu nome completo.'
-    if (!isEmail(form.email)) next.email = 'Informe um e-mail valido.'
-    if (!form.role) next.role = 'Escolha a opcao que melhor descreve voce.'
-    if (form.message.trim().length < 15) next.message = 'Conte um pouco mais — pelo menos 15 caracteres.'
+    if (!isEmail(form.email)) next.email = 'Informe um e-mail válido.'
+    if (!form.role) next.role = 'Escolha a opção que melhor descreve você.'
+    if (form.message.trim().length < 15) next.message = 'Conte um pouco mais: pelo menos 15 caracteres.'
     setErrors(next)
     return Object.keys(next).length === 0
   }
@@ -36,11 +38,15 @@ export default function Contato() {
     e.preventDefault()
     if (!validate()) return
     setSending(true)
-    // Sem back-end: apenas simulamos a latencia do envio.
-    // Trocar por sendContactMessage(form) de src/services/api.ts.
-    await fakeDelay(1100)
-    setSending(false)
-    setSent(true)
+    setFalha(null)
+    try {
+      await sendContactMessage(form)
+      setSent(true)
+    } catch (e) {
+      setFalha(e instanceof Error ? e.message : 'Não foi possível enviar a mensagem.')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -49,7 +55,7 @@ export default function Contato() {
         eyebrow="Contato"
         title="Fale com quem construiu a IrisFlow."
         highlight={['construiu']}
-        lead="A equipe e pequena e responde direto, sem intermediario. Familias, profissionais de saude, clinicas e associacoes tem canal aberto."
+        lead="A equipe é pequena e responde direto, sem intermediário. Famílias, profissionais de saúde, clínicas e associações têm canal aberto."
       />
 
       <section className="section">
@@ -90,12 +96,18 @@ export default function Contato() {
                         />
                       </svg>
                     </span>
-                    <h2 style={{ fontSize: '1.5rem' }}>Mensagem registrada</h2>
+                    <h2 style={{ fontSize: '1.5rem' }}>Mensagem recebida</h2>
                     <p style={{ maxWidth: '46ch', marginInline: 'auto' }}>
-                      Este projeto ainda nao tem back-end conectado, entao a mensagem ficou apenas
-                      nesta tela. Com a integracao ativa, ela chegaria em {BRAND.email}.
+                      Obrigado por escrever. A equipe responde pelo próprio {BRAND.email},
+                      normalmente em até dois dias úteis.
                     </p>
-                    <Button variant="secondary" onClick={() => setSent(false)}>
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setForm({ name: '', email: '', role: '', message: '' })
+                        setSent(false)
+                      }}
+                    >
                       Escrever outra
                     </Button>
                   </div>
@@ -111,7 +123,7 @@ export default function Contato() {
                       onChange={set('name')}
                       error={errors.name}
                       autoComplete="name"
-                      placeholder="Como devemos chamar voce"
+                      placeholder="Como devemos chamar você"
                     />
 
                     <Field
@@ -125,7 +137,7 @@ export default function Contato() {
                     />
 
                     <SelectField
-                      label="Voce e"
+                      label="Você é"
                       value={form.role}
                       onChange={set('role')}
                       error={errors.role}
@@ -133,8 +145,8 @@ export default function Contato() {
                       <option value="">Selecione…</option>
                       <option value="familiar">Familiar ou cuidador</option>
                       <option value="usuario">Pessoa que vai usar a IrisFlow</option>
-                      <option value="profissional">Profissional de saude</option>
-                      <option value="clinica">Clinica ou associacao</option>
+                      <option value="profissional">Profissional de saúde</option>
+                      <option value="clinica">Clínica ou associação</option>
                       <option value="imprensa">Imprensa</option>
                       <option value="outro">Outro</option>
                     </SelectField>
@@ -149,7 +161,7 @@ export default function Contato() {
                         rows={5}
                         value={form.message}
                         onChange={set('message')}
-                        placeholder="Conte o contexto: quem vai usar, qual a condicao, o que voces ja tentaram."
+                        placeholder="Conte o contexto: quem vai usar, qual a condição, o que vocês já tentaram."
                         style={{ resize: 'vertical', fontFamily: 'inherit' }}
                       />
                       {errors.message && (
@@ -158,6 +170,12 @@ export default function Contato() {
                         </p>
                       )}
                     </div>
+
+                    {falha && (
+                      <p className="field__error" role="alert" style={{ marginBottom: 'var(--sp-4)' }}>
+                        {falha}
+                      </p>
+                    )}
 
                     <Button type="submit" full size="lg" loading={sending}>
                       {sending ? 'Enviando…' : 'Enviar mensagem'}
@@ -170,17 +188,19 @@ export default function Contato() {
             <div style={{ display: 'grid', gap: 'var(--sp-4)' }}>
               <Reveal anim="left" delay={120}>
                 <Card as="div">
-                  <CardIcon tone="teal">◈</CardIcon>
-                  <h3 id="validacao">Programa de validacao</h3>
+                  <CardIcon tone="teal">
+                    <Icon name="pessoas" size={26} />
+                  </CardIcon>
+                  <h3 id="validacao">Programa de validação</h3>
                   <p>
-                    Clinicas de reabilitacao neurologica, associacoes de pacientes e profissionais
-                    prescritores recebem acesso gratuito durante todo o periodo de validacao,
-                    treinamento da equipe, canal direto com os fundadores e influencia real sobre
+                    Clínicas de reabilitação neurológica, associações de pacientes e profissionais
+                    prescritores recebem acesso gratuito durante todo o período de validação,
+                    treinamento da equipe, canal direto com os fundadores e influência real sobre
                     as prioridades do produto.
                   </p>
                   <p>
                     Em contrapartida, pedimos acesso a pacientes reais mediante consentimento,
-                    observacao clinica qualificada, retorno estruturado e autorizacao para
+                    observação clínica qualificada, retorno estruturado e autorização para
                     documentar o caso de forma anonimizada.
                   </p>
                 </Card>
@@ -188,7 +208,9 @@ export default function Contato() {
 
               <Reveal anim="left" delay={220}>
                 <Card as="div">
-                  <CardIcon>✉</CardIcon>
+                  <CardIcon>
+                    <Icon name="email" size={26} />
+                  </CardIcon>
                   <h3>Canais diretos</h3>
                   <p>
                     E-mail:{' '}

@@ -24,7 +24,6 @@
   width: 52px;
   height: 52px;
   border-radius: 16px;
-  font-size: 1.45rem;
   flex: none;
   transition: transform var(--dur) var(--ease-spring);
 }

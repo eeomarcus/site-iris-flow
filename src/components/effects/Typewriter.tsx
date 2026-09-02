@@ -10,9 +10,9 @@ type Props = {
 }
 
 /**
- * Maquina de escrever: escreve e apaga frases em ciclo.
- * No contexto da IrisFlow a metafora e literal — e assim que o usuario
- * compoe uma frase no teclado ocular, uma letra por fixacao.
+ * Máquina de escrever: escreve e apaga frases em ciclo. No contexto da
+ * IrisFlow a metáfora é literal, porque é assim que o usuário compõe uma
+ * frase no teclado ocular: uma letra por fixação.
  */
 export function Typewriter({ phrases, typeMs = 62, eraseMs = 28, holdMs = 1900 }: Props) {
   const [index, setIndex] = useState(0)

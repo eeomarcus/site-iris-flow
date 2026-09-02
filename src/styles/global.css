@@ -33,7 +33,7 @@ video {
 }
 
 /* A Boldonse tem metricas altas: linhas apertadas se sobrepoem, por isso
-   a entrelinha dos titulos e mais generosa do que o usual para display. */
+   a entrelinha dos títulos e mais generosa do que o usual para display. */
 h1,
 h2,
 h3,
@@ -99,7 +99,7 @@ hr {
   margin: var(--sp-6) 0;
 }
 
-/* ---------- foco visivel: requisito de acessibilidade, nao enfeite ---------- */
+/* ---------- foco visível: requisito de acessibilidade, não enfeite ---------- */
 :focus-visible {
   outline: 3px solid var(--blue-500);
   outline-offset: 3px;
@@ -115,7 +115,7 @@ hr {
   color: #fff;
 }
 
-/* Ancoras nao podem parar debaixo do cabecalho fixo. */
+/* Âncoras não podem parar debaixo do cabeçalho fixo. */
 [id] {
   scroll-margin-top: calc(var(--header-h) + 16px);
 }
@@ -141,7 +141,7 @@ hr {
   padding-block: var(--sp-8);
 }
 
-/* Faixa de fundo alternado, para separar secoes sem linha divisoria. */
+/* Faixa de fundo alternado, para separar seções sem linha divisória. */
 .section--soft {
   background: var(--bg-soft);
   border-block: 1px solid var(--line);
@@ -193,7 +193,7 @@ hr {
   opacity: 0.55;
 }
 
-/* Palavra destacada dentro de um titulo. */
+/* Palavra destacada dentro de um título. */
 .accent-text {
   color: var(--blue);
 }
@@ -241,7 +241,16 @@ hr {
   margin: 0;
 }
 
-/* ---------- respeito a preferencia de movimento reduzido ---------- */
+/* ---------- ícones ----------
+   Todo <svg> do conjunto de ícones entra como bloco: assim ele não herda
+   o espaço extra que a linha de texto reservaria embaixo, e a cor vem do
+   contexto por currentColor. */
+.icon {
+  display: block;
+  flex: none;
+}
+
+/* ---------- respeito à preferência de movimento reduzido ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

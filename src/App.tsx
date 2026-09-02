@@ -5,7 +5,7 @@ import { AccountProvider } from '@/context/AccountContext'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 
-/* Cada pagina em seu proprio pedaco: o primeiro carregamento traz apenas
+/* Cada página em seu próprio pedaço: o primeiro carregamento traz apenas
    a home, e o resto chega sob demanda. */
 const Home = lazy(() => import('@/pages/Home'))
 const Solucao = lazy(() => import('@/pages/Solucao'))
@@ -25,7 +25,7 @@ const Privacidade = lazy(() =>
 )
 const Termos = lazy(() => import('@/pages/Legal').then((m) => ({ default: m.Termos })))
 
-/** Placeholder exibido enquanto o pedaco da rota chega. */
+/** Exibido enquanto o pedaço da rota ainda está chegando. */
 function RouteFallback() {
   return (
     <div className="container section" aria-busy="true">
@@ -54,7 +54,7 @@ export default function App() {
                 <Route path="sobre" element={<Sobre />} />
                 <Route path="contato" element={<Contato />} />
 
-                {/* fluxo de contratacao */}
+                {/* fluxo de contratação */}
                 <Route path="cadastro" element={<Cadastro />} />
                 <Route path="pagamento" element={<Pagamento />} />
                 <Route path="sucesso" element={<Sucesso />} />

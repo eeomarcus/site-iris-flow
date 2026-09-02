@@ -20,7 +20,7 @@
     box-shadow var(--dur) var(--ease-out);
 }
 
-/* estagio 1 — contorno de destaque */
+/* estágio 1 — contorno de destaque */
 .dwell:hover,
 .dwell:focus-visible {
   border-color: var(--accent);
@@ -28,13 +28,13 @@
   box-shadow: var(--glow);
 }
 
-/* estagio 2 — mudanca de cor durante a selecao */
+/* estágio 2 — mudança de cor durante a seleção */
 .dwell--active {
   background: linear-gradient(150deg, rgba(27, 84, 168, 0.34), rgba(27, 84, 168, 0.12));
   border-color: var(--accent);
 }
 
-/* confirmacao */
+/* confirmação */
 .dwell--done,
 .dwell--cooldown {
   background: linear-gradient(150deg, var(--ok-line), var(--ok-soft));
@@ -42,7 +42,7 @@
   color: var(--ok);
 }
 
-/* estagio 3 — aro de progresso */
+/* estágio 3 — aro de progresso */
 .dwell__ring {
   position: absolute;
   inset: 0;

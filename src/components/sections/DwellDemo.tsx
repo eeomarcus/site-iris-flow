@@ -3,7 +3,7 @@ import { AnimatedHeadline } from '@/components/effects/AnimatedHeadline'
 import { Reveal } from '@/components/effects/Reveal'
 import './dwell-demo.css'
 
-/** Ordem por frequencia das letras do portugues, como no teclado do produto. */
+/** Ordem por frequência das letras do português, como no teclado do produto. */
 const ROWS = [
   ['A', 'E', 'O', 'S', 'R', 'I'],
   ['N', 'D', 'M', 'U', 'T', 'C'],
@@ -11,7 +11,7 @@ const ROWS = [
   ['B', 'F', 'Z', 'J', 'X', 'K'],
 ]
 
-const QUICK = ['Sim', 'Nao', 'Obrigado', 'Estou com dor']
+const QUICK = ['Sim', 'Não', 'Obrigado', 'Estou com dor']
 
 const DWELL_OPTIONS = [800, 1500, 2500] as const
 
@@ -40,7 +40,7 @@ export function DwellDemo() {
       return prev + value
     })
     setSpoken(false)
-    // periodo refratario de 800 ms — igual ao do produto
+    // período refratário de 800 ms, igual ao do produto
     setLocked(true)
     cool.current = window.setTimeout(() => setLocked(false), 800)
   }
@@ -61,8 +61,8 @@ export function DwellDemo() {
 
   const speak = () => {
     setSpoken(true)
-    // Sintese de voz do proprio navegador — no produto e uma voz
-    // em portugues brasileiro embarcada, que funciona offline.
+    // Síntese de voz do próprio navegador. No produto é uma voz
+    // em português brasileiro embarcada, que funciona offline.
     if ('speechSynthesis' in window && text.trim()) {
       const u = new SpeechSynthesisUtterance(text)
       u.lang = 'pt-BR'
@@ -91,7 +91,7 @@ export function DwellDemo() {
         </Reveal>
 
         <AnimatedHeadline
-          text="Assim e escrever com o olhar."
+          text="Assim é escrever com o olhar."
           as="h2"
           highlight={['olhar.']}
           className="demo__title"
@@ -99,22 +99,22 @@ export function DwellDemo() {
 
         <Reveal anim="up" delay={140}>
           <p className="lead demo__lead">
-            Na IrisFlow, o gatilho e o olhar estimado pela webcam. Aqui, para voce experimentar sem
-            instalar nada, o gatilho e o cursor ou a tecla Tab. O resto e identico: contorno de
-            destaque ao entrar no alvo, mudanca de cor durante a selecao, aro de progresso ate a
-            confirmacao e um periodo refratario de 800 ms para impedir o disparo duplo.
+            Na IrisFlow, o gatilho é o olhar estimado pela webcam. Aqui, para você experimentar sem
+            instalar nada, o gatilho é o cursor ou a tecla Tab. O resto é idêntico: contorno de
+            destaque ao entrar no alvo, mudança de cor durante a seleção, aro de progresso até a
+            confirmação e um período refratário de 800 ms para impedir o disparo duplo.
           </p>
         </Reveal>
 
         <Reveal anim="zoom" delay={220}>
           <div className="demo__frame panel">
-            {/* barra de estado, como na tela real de calibracao */}
+            {/* barra de estado, como na tela real de calibração */}
             <div className="demo__status">
-              <span className="demo__chip demo__chip--ok">camera ativa</span>
-              <span className="demo__chip demo__chip--ok">rastreamento estavel</span>
-              <span className="demo__chip">calibracao 9/9</span>
+              <span className="demo__chip demo__chip--ok">câmera ativa</span>
+              <span className="demo__chip demo__chip--ok">rastreamento estável</span>
+              <span className="demo__chip">calibração 9/9</span>
               <span className="demo__spacer" />
-              <span className="demo__chip demo__chip--sos">emergencia</span>
+              <span className="demo__chip demo__chip--sos">emergência</span>
             </div>
 
             {/* campo de texto composto */}
@@ -133,8 +133,8 @@ export function DwellDemo() {
               </button>
             </div>
 
-            {/* teclado ordenado por frequencia */}
-            <div className="demo__keys" role="group" aria-label="Teclado ocular de demonstracao">
+            {/* teclado ordenado por frequência */}
+            <div className="demo__keys" role="group" aria-label="Teclado ocular de demonstração">
               {ROWS.map((row, ri) => (
                 <div className="demo__row" key={ri}>
                   {row.map((key) => (
@@ -154,8 +154,8 @@ export function DwellDemo() {
               </div>
             </div>
 
-            {/* frases rapidas */}
-            <div className="demo__quick" role="group" aria-label="Frases rapidas">
+            {/* frases rápidas */}
+            <div className="demo__quick" role="group" aria-label="Frases rápidas">
               {QUICK.map((phrase) => (
                 <DemoKey
                   key={phrase}
@@ -168,9 +168,9 @@ export function DwellDemo() {
               ))}
             </div>
 
-            {/* ajuste do tempo de fixacao */}
+            {/* ajuste do tempo de fixação */}
             <div className="demo__settings">
-              <span className="demo__settings-label">tempo de fixacao</span>
+              <span className="demo__settings-label">tempo de fixação</span>
               {DWELL_OPTIONS.map((ms) => (
                 <button
                   key={ms}
@@ -191,9 +191,9 @@ export function DwellDemo() {
 
         <Reveal anim="fade" delay={320}>
           <p className="demo__note">
-            O teclado real segue a frequencia das letras do portugues — A, E, O, S, R, I, N, D, M,
-            U, T, C, L — porque isso encurta a distancia que o olho percorre entre teclas
-            consecutivas. Layout alfabetico e QWERTY continuam disponiveis nas configuracoes.
+            O teclado real segue a frequência das letras do português (A, E, O, S, R, I, N, D, M,
+            U, T, C, L), porque isso encurta a distância que o olho percorre entre teclas
+            consecutivas. Os layouts alfabético e QWERTY continuam disponíveis nas configurações.
           </p>
         </Reveal>
       </div>

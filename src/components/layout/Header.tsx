@@ -9,7 +9,7 @@ import { PLAN } from '@/data/content'
 import './header.css'
 
 const NAV = [
-  { to: '/solucao', label: 'A solucao' },
+  { to: '/solucao', label: 'A solução' },
   { to: '/como-funciona', label: 'Como funciona' },
   { to: '/acessibilidade', label: 'Acessibilidade' },
   { to: '/planos', label: 'Planos' },
@@ -17,14 +17,14 @@ const NAV = [
   { to: '/contato', label: 'Contato' },
 ]
 
-/** Rotas que comecam com fundo claro, sem faixa escura de abertura. */
+/** Rotas que começam com fundo claro, sem faixa escura de abertura. */
 const LIGHT_ROUTES = ['/cadastro', '/pagamento', '/sucesso', '/entrar', '/conta']
 
 export function Header() {
   const { scrolled, progress } = useScrollProgress()
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
-  const { account } = useAccount()
+  const { account, loading } = useAccount()
 
   useEffect(() => setOpen(false), [pathname])
 
@@ -35,9 +35,9 @@ export function Header() {
     }
   }, [open])
 
-  // As paginas de conteudo abrem com uma faixa escura; as de fluxo
-  // (cadastro, pagamento, conta) sao claras desde o topo. O cabecalho
-  // so entra no modo negativo quando esta de fato sobre a faixa escura.
+  // As páginas de conteúdo abrem com uma faixa escura; as de fluxo
+  // (cadastro, pagamento, conta) são claras desde o topo. O cabeçalho
+  // só entra no modo negativo quando está de fato sobre a faixa escura.
   const opensLight = LIGHT_ROUTES.some((r) => pathname.startsWith(r))
   const onLightBackdrop = scrolled || open || opensLight
 
@@ -52,7 +52,7 @@ export function Header() {
       <div className="container header__inner">
         <Logo size="sm" tone={onLightBackdrop ? 'positivo' : 'negativo'} />
 
-        <nav className="header__nav" aria-label="Navegacao principal">
+        <nav className="header__nav" aria-label="Navegação principal">
           {NAV.map((item) => (
             <NavLink key={item.to} to={item.to} className="header__link underline-grow">
               {item.label}
@@ -62,7 +62,10 @@ export function Header() {
 
         <div className="header__actions">
           <ThemeToggle />
-          {account ? (
+          {/* Enquanto a sessão carrega não mostramos nem "Entrar" nem "Minha
+              conta": exibir o par errado por um instante e trocar depois
+              chama mais atenção do que o espaço vazio. */}
+          {loading ? null : account ? (
             <Button to="/conta" variant="secondary">
               Minha conta
             </Button>
@@ -71,7 +74,7 @@ export function Header() {
               <Button to="/entrar" variant="ghost">
                 Entrar
               </Button>
-              <Button to="/cadastro">Testar gratis</Button>
+              <Button to="/cadastro">Testar grátis</Button>
             </>
           )}
         </div>
@@ -91,7 +94,7 @@ export function Header() {
       </div>
 
       <div id="menu-mobile" className={`drawer${open ? ' is-open' : ''}`} hidden={!open}>
-        <nav aria-label="Navegacao mobile">
+        <nav aria-label="Navegação mobile">
           {NAV.map((item, i) => (
             <NavLink
               key={item.to}
@@ -105,7 +108,7 @@ export function Header() {
         </nav>
         <div className="drawer__actions">
           <ThemeToggle full />
-          {account ? (
+          {loading ? null : account ? (
             <Button to="/conta" full variant="secondary">
               Minha conta
             </Button>
@@ -115,7 +118,7 @@ export function Header() {
                 Entrar
               </Button>
               <Button to="/cadastro" full>
-                Testar gratis por {PLAN.trialDays} dias
+                Testar grátis por {PLAN.trialDays} dias
               </Button>
             </>
           )}

@@ -4,10 +4,11 @@ Site da **IrisFlow**, startup de tecnologia assistiva que transforma o movimento
 comunicação e em controle do computador usando a webcam que a pessoa já tem em casa.
 Todo o conteúdo vem do Plano de Negócios IrisFlow 2026.
 
-> **Sem banco de dados.** O projeto entrega o ecossistema de páginas, o design system, os efeitos
-> e os fluxos de cadastro e pagamento **completamente mockados**. Nada é persistido em servidor,
-> nenhuma cobrança é feita e nenhum dado sai do navegador. Os pontos de integração estão isolados
-> em `src/services/api.ts`.
+> **Banco no Supabase, pagamento ainda não.** Cadastro, login, assinatura, cancelamento e o
+> formulário de contato gravam de verdade, via Supabase (esquema em `supabase/schema.sql`).
+> O que continua mockado é só a cobrança: nenhum gateway está conectado, nenhum cartão é
+> processado e nada é cobrado. Toda a conversa com o banco está isolada em
+> `src/services/api.ts`.
 
 > **O produto ainda não tem nome próprio no site.** Empresa e solução aparecem sob a mesma marca,
 > como o próprio plano faz ("A IrisFlow é um programa de computador que estima para onde a pessoa
@@ -76,8 +77,66 @@ componente precisa saber em que fundo está: `.panel`, `.card`, `.btn` e todo o 
 
 Todos os pares de texto e fundo passam WCAG AA (o mais apertado é `--ok` sobre branco, 4,60:1).
 
+### Ícones
+
+Todos os ícones do site são SVG desenhados em `src/components/ui/Icon.tsx`, na mesma grade de
+24×24, traço de 1,6 e sem preenchimento. A cor vem sempre do contexto (`currentColor`), então o
+mesmo ícone serve nas faixas claras e nas escuras, e nenhum deles precisa de variante.
+
+```tsx
+import { Icon } from '@/components/ui/Icon'
+
+<Icon name="teclado" size={26} />
+```
+
+Os nomes são semânticos (`alvo`, `teclado`, `olho`, `webcam`, `offline`, `cadeado`…), e os dados
+em `content.ts` guardam o nome do ícone, não o desenho. Para acrescentar um, basta somar a chave
+ao tipo `IconName` e o caminho ao mapa `PATHS`.
+
 Fonte de display: **Boldonse** (SIL OFL, licença em `public/fonts/Boldonse-OFL.txt`).
 Corpo de texto: pilha sans-serif do sistema.
+
+---
+
+## Back-end
+
+O banco é um projeto Supabase. O esquema inteiro está em **`supabase/schema.sql`**: cole no SQL
+Editor e execute uma vez. Ele é idempotente.
+
+```
+plans              preço e dias de avaliação (deixam de ser constantes no código)
+profiles           quem paga, 1:1 com auth.users
+beneficiaries      quem usa — separado porque `condition` é dado sensível de saúde (LGPD)
+subscriptions      status, trial, próxima cobrança, preço acertado na contratação
+payment_methods    método, bandeira e os quatro últimos dígitos; nunca o cartão
+charges            histórico de cobranças, para o webhook do gateway
+contact_messages   formulário de /contato
+app_releases       URLs dos instaladores
+```
+
+**Row Level Security está ligada em todas as tabelas.** A chave anônima vai no bundle e é
+pública: quem impede um assinante de ler os dados de outro são as políticas, não o segredo da
+chave. Assinatura e pagamento são somente leitura para o cliente; toda mudança de estado passa
+por funções `security definer` (`complete_registration`, `attach_payment_method`,
+`request_cancellation`, `reactivate_subscription`), porque senão qualquer pessoa com a chave
+marcaria a própria assinatura como paga.
+
+O painel lê a view `my_account`, que devolve perfil, beneficiário, assinatura e forma de
+pagamento em uma linha só, no formato que as telas já usavam.
+
+### Configuração
+
+```bash
+cp .env.example .env.local   # e preencha com Project Settings > API
+npm run dev
+```
+
+A `service_role key` **não** entra no `.env.local`: ela ignora a RLS e, com prefixo `VITE_`,
+seria publicada no bundle. Ela só existe do lado do servidor.
+
+Em **Authentication > Sign In / Providers > Email**, a opção *Confirm email* precisa estar
+desligada para o fluxo ir direto do cadastro ao checkout. Com ela ligada, o `signUp` não devolve
+sessão e o cadastro para com uma mensagem explicando isso.
 
 ---
 
@@ -93,17 +152,18 @@ src/
 │   ├── animations.css       @keyframes + utilitários (.panel, .lift, .hover-glow…)
 │   └── global.css           reset, layout, acessibilidade, prefers-reduced-motion
 │
-├── data/content.ts          TODO o texto e os números do site, em um só lugar
-├── services/api.ts          pontos de integração (vazios de propósito)
+├── data/content.ts          TODO o texto de venda do site, em um só lugar
+├── lib/supabase.ts          cliente do Supabase e tradução das mensagens de erro
+├── services/api.ts          única parte do site que conhece o banco
 ├── utils/format.ts          máscaras (CPF, telefone, cartão) e validações reais
 │
-├── context/AccountContext   estado de conta e assinatura (localStorage)
-├── hooks/                   useInView, useCountUp, usePointer, useScrollProgress…
+├── context/AccountContext   sessão, conta e assinatura, lidas do Supabase
+├── hooks/                   useInView, useCountUp, useDownloads, usePointer…
 │
 ├── components/
 │   ├── effects/             AmbientBackground, DwellTarget, Reveal, AnimatedHeadline,
 │   │                        Typewriter, Counter, Parallax, Marquee
-│   ├── ui/                  Button, Card, Field, Stepper, Skeleton
+│   ├── ui/                  Button, Card, Field, Stepper, Skeleton, Icon
 │   ├── layout/              Header, Footer, Layout, Logo + IrisMark, PageHead
 │   └── sections/            Hero, ProblemSection, DwellDemo, Pipeline, Modules,
 │                            Metrics, Differentiators, Comparison, Pricing, Faq, CTA
@@ -167,15 +227,20 @@ fica estático — requisito, e não cortesia, para o público atendido.
 
 ## O que falta para ir a produção
 
-1. **`src/services/api.ts`** — cada função tem a assinatura pronta e o corpo vazio, com o
-   endpoint ou o SDK comentado. Preencha e troque as chamadas do `AccountContext`.
-2. **Gateway de pagamento** — `tokenizeCard` deve usar o SDK do gateway **no navegador**
-   (Stripe, Mercado Pago, Pagar.me). Dados de cartão nunca devem passar pelo seu servidor.
-3. **`DOWNLOADS`** em `services/api.ts` — apontar para os instaladores do build Electron.
-4. **Autenticação real** — hoje o login apenas confere o e-mail contra o `localStorage`.
-5. **Páginas legais** — `src/pages/Legal.tsx` traz um rascunho de referência que precisa de
+1. **Gateway de pagamento** — `tokenizeCard`, `createPixCharge` e `createBoleto` em
+   `src/services/api.ts` continuam vazios. A tokenização tem que rodar **no navegador** (Stripe,
+   Mercado Pago, Pagar.me); dados de cartão nunca devem passar pelo seu servidor. O token
+   resultante vai em `attach_payment_method`, no campo `p_gateway_token`.
+2. **Webhook do gateway** — precisa de uma Edge Function com a `service_role key` para escrever
+   em `charges` e mover `subscriptions.status` quando um pagamento entrar ou falhar. É a única
+   parte que a RLS deliberadamente não deixa o cliente fazer.
+3. **Cobrança do fim do trial** — hoje `next_charge_at` é gravado, mas nada roda na data. Um
+   cron do Supabase (`pg_cron`) ou uma rotina externa precisa disparar a cobrança.
+4. **Instaladores** — publicar o build Electron e trocar os `'#'` da tabela `app_releases`.
+5. **Recuperação de senha** — `resetPasswordForEmail` ainda não está na tela de acesso.
+6. **Páginas legais** — `src/pages/Legal.tsx` traz um rascunho de referência que precisa de
    revisão jurídica antes de publicar.
-6. **Nome do produto**, quando existir: `src/data/content.ts`, o rótulo `/solucao` no `NAV` e no
+7. **Nome do produto**, quando existir: `src/data/content.ts`, o rótulo `/solucao` no `NAV` e no
    `Footer`, e a variante do `<Logo />`.
 
 ---

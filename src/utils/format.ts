@@ -1,9 +1,9 @@
-/* Mascaras e validacoes usadas nos formularios de cadastro e checkout.
-   Nenhuma delas substitui a validacao do servidor — ambas precisam existir. */
+/* Máscaras e validações usadas nos formulários de cadastro e checkout.
+   Nenhuma delas substitui a validação do servidor: as duas precisam existir. */
 
 const onlyDigits = (v: string) => v.replace(/\D/g, '')
 
-/* ---------------- mascaras ---------------- */
+/* ---------------- máscaras ---------------- */
 
 export function maskCPF(value: string) {
   const d = onlyDigits(value).slice(0, 11)
@@ -40,7 +40,7 @@ export function maskCEP(value: string) {
   return onlyDigits(value).slice(0, 8).replace(/(\d{5})(\d)/, '$1-$2')
 }
 
-/* ---------------- validacoes ---------------- */
+/* ---------------- validações ---------------- */
 
 export function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim())
@@ -50,7 +50,7 @@ export function isPhone(value: string) {
   return onlyDigits(value).length >= 10
 }
 
-/** Validacao real de CPF pelos dois digitos verificadores. */
+/** Validação real de CPF pelos dois dígitos verificadores. */
 export function isCPF(value: string) {
   const cpf = onlyDigits(value)
   if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false
@@ -65,7 +65,7 @@ export function isCPF(value: string) {
   return digit(9) === Number(cpf[9]) && digit(10) === Number(cpf[10])
 }
 
-/** Luhn — checagem de consistencia do numero do cartao, nao de autorizacao. */
+/** Luhn: checa a consistência do número do cartão, não a autorização. */
 export function isCardNumber(value: string) {
   const d = onlyDigits(value)
   if (d.length < 13 || d.length > 19) return false
@@ -101,14 +101,14 @@ export function cardBrand(value: string) {
   if (/^3[47]/.test(d)) return 'American Express'
   if (/^(606282|3841)/.test(d)) return 'Hipercard'
   if (/^(4011|4312|4389|5041|5067|509|6277|6362|650|6516|6550)/.test(d)) return 'Elo'
-  return 'Cartao'
+  return 'Cartão'
 }
 
 export function last4(value: string) {
   return onlyDigits(value).slice(-4)
 }
 
-/* ---------------- apresentacao ---------------- */
+/* ---------------- apresentação ---------------- */
 
 export const brl = (value: number) =>
   value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })

@@ -5,9 +5,8 @@ import { PIPELINE } from '@/data/content'
 import './pipeline.css'
 
 /**
- * Scrollytelling do pipeline de rastreamento: uma linha se desenha
- * conforme a secao e percorrida e cada estagio acende ao entrar em foco.
- * Efeitos 2, 7 e 8 do catalogo da SVGator.
+ * Pipeline de rastreamento em scrollytelling: uma linha se desenha
+ * conforme a seção é percorrida e cada estágio acende ao entrar em foco.
  */
 export function Pipeline() {
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -50,15 +49,15 @@ export function Pipeline() {
         </Reveal>
 
         <AnimatedHeadline
-          text="Da webcam ate a coordenada na tela, em seis estagios."
+          text="Da webcam até a coordenada na tela, em seis estágios."
           as="h2"
-          highlight={['seis', 'estagios.']}
+          highlight={['seis', 'estágios.']}
           className="pipeline__title"
         />
 
         <Reveal anim="up" delay={140}>
           <p className="lead pipeline__lead">
-            O ciclo inteiro roda a cada quadro de video, no computador da propria pessoa. Nenhuma
+            O ciclo inteiro roda a cada quadro de vídeo, no computador da própria pessoa. Nenhuma
             imagem sai do dispositivo.
           </p>
         </Reveal>

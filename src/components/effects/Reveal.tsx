@@ -13,9 +13,9 @@ const KEYFRAMES: Record<Anim, string> = {
 
 type Props = {
   children: ReactNode
-  /** Direcao do reveal. */
+  /** Direção da entrada. */
   anim?: Anim
-  /** Atraso em ms — use para escalonar itens de uma lista. */
+  /** Atraso em ms, usado para escalonar os itens de uma lista. */
   delay?: number
   duration?: number
   as?: ElementType
@@ -24,8 +24,7 @@ type Props = {
 }
 
 /**
- * Reveal de scrollytelling: o conteudo entra quando cruza a viewport.
- * Efeito 2 e 15 do catalogo da SVGator (scrollytelling / scrolling effects).
+ * O conteúdo entra em cena quando cruza a viewport, uma vez só.
  */
 export function Reveal({
   children,

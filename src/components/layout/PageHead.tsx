@@ -13,9 +13,9 @@ type Props = {
 }
 
 /**
- * Cabecalho das paginas internas. E uma faixa escura, como o hero, para
- * que o cabecalho fixo tenha sempre o mesmo comportamento no topo de
- * qualquer rota — e para que a marca apareca em negativo ali.
+ * Cabeçalho das páginas internas. É uma faixa escura, como o hero, para
+ * que o cabeçalho fixo tenha sempre o mesmo comportamento no topo de
+ * qualquer rota, e para que a marca apareça em negativo ali.
  */
 export function PageHead({ eyebrow, title, highlight = [], lead, children }: Props) {
   return (

@@ -25,9 +25,12 @@
   white-space: nowrap;
 }
 
+/* Separador desenhado em CSS, para não depender de um caractere de fonte. */
 .marquee__sep {
-  color: var(--teal);
-  font-size: 0.6rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--teal);
 }
 
 @media (prefers-reduced-motion: reduce) {

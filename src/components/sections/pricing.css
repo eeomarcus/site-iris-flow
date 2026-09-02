@@ -54,7 +54,7 @@
 .plan__name {
   font-size: 1.4rem;
   /* A Boldonse ultrapassa a caixa em corpos grandes: sem esta folga
-     o numero do preco encosta no nome do plano. */
+     o número do preco encosta no nome do plano. */
   margin-bottom: var(--sp-5);
 }
 
@@ -164,7 +164,6 @@
   background: var(--ok-soft);
   border: 1px solid var(--ok-line);
   color: var(--ok);
-  font-size: 1.2rem;
 }
 
 .guarantee h3 {

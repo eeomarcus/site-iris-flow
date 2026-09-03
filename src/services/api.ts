@@ -10,6 +10,7 @@
 
 import { client, mensagemDeErro } from '@/lib/supabase'
 import type { Account, Payment, Profile } from '@/context/AccountContext'
+import { getPlan, type PlanId } from '@/data/content'
 
 /** Base de uma API própria, caso existam Edge Functions. Opcional. */
 export const API_URL = import.meta.env.VITE_API_URL ?? ''
@@ -47,6 +48,7 @@ type MyAccountRow = {
   prescriber_name: string | null
   prescriber_role: string | null
   status: Account['status']
+  plan_id: string | null
   price_brl: number | string
   trial_ends_at: string
   next_charge_at: string
@@ -62,7 +64,7 @@ type MyAccountRow = {
 const COLUNAS = `
   subscription_id, profile_id, buyer_name, email, phone, document, newsletter,
   user_name, relation, condition, os, prescriber_name, prescriber_role,
-  status, price_brl, trial_ends_at, next_charge_at, canceled_at, created_at,
+  status, plan_id, price_brl, trial_ends_at, next_charge_at, canceled_at, created_at,
   payment_method, billing_interval, card_last4, card_brand, holder
 `
 
@@ -98,6 +100,9 @@ function paraAccount(row: MyAccountRow): Account {
     nextChargeAt: row.next_charge_at,
     // numeric pode chegar como texto, dependendo da versão do PostgREST
     priceBRL: Number(row.price_brl),
+    // getPlan cai no plano recomendado quando row.plan_id vem null (assinaturas
+    // antigas, criadas antes da migração para três planos)
+    planId: getPlan(row.plan_id).id,
   }
 }
 
@@ -111,7 +116,7 @@ function paraAccount(row: MyAccountRow): Account {
  * pelo próprio cliente e viaja dentro do JWT. CPF e condição de saúde
  * entram depois, pela função complete_registration, que roda no banco.
  */
-export async function signUp(profile: Profile, password: string): Promise<Account> {
+export async function signUp(profile: Profile, password: string, planId: PlanId): Promise<Account> {
   const sb = client()
 
   // Uma tentativa anterior pode ter criado o usuário e falhado adiante.
@@ -152,6 +157,7 @@ export async function signUp(profile: Profile, password: string): Promise<Accoun
     p_prescriber_name: profile.prescriberName ?? null,
     p_prescriber_role: profile.prescriberRole ?? null,
     p_newsletter: profile.newsletter,
+    p_plan_id: planId,
   })
   if (erroRpc) erro(erroRpc)
 

@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { supabase } from '@/lib/supabase'
 import * as api from '@/services/api'
+import type { PlanId } from '@/data/content'
 
 /* ============================================================
    Estado de conta e assinatura.
@@ -57,7 +58,10 @@ export type Account = {
   createdAt: string
   trialEndsAt: string
   nextChargeAt: string
+  /** Fotografia do preço no momento da contratação. */
   priceBRL: number
+  /** Plano contratado. Casa com o id em `PLANS` e com `public.plans.id`. */
+  planId: PlanId
 }
 
 type Ctx = {
@@ -75,8 +79,8 @@ type Ctx = {
    * /conta joga o usuário para o login antes da sessão carregar.
    */
   loading: boolean
-  /** Cria a conta, autentica e abre o período de avaliação. */
-  register: (profile: Profile, password: string) => Promise<Account>
+  /** Cria a conta, autentica e abre o período de avaliação no plano escolhido. */
+  register: (profile: Profile, password: string, planId: PlanId) => Promise<Account>
   /** Guarda a forma de pagamento. A cobrança só ocorre ao fim da avaliação. */
   attachPayment: (payment: Payment) => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
@@ -133,8 +137,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     }
   }, [refresh])
 
-  const register = useCallback(async (profile: Profile, password: string) => {
-    const nova = await api.signUp(profile, password)
+  const register = useCallback(async (profile: Profile, password: string, planId: PlanId) => {
+    const nova = await api.signUp(profile, password, planId)
     setAccount(nova)
     setAuthenticated(true)
     return nova

@@ -18,7 +18,7 @@ import {
   maskCard,
   maskExpiry,
 } from '@/utils/format'
-import { PLAN } from '@/data/content'
+import { getPlan } from '@/data/content'
 import './checkout.css'
 
 type Method = Payment['method']
@@ -49,6 +49,12 @@ export default function Pagamento() {
 
   if (loading) return <SessionLoading />
   if (!account) return <Navigate to={authenticated ? '/cadastro' : '/entrar'} replace />
+
+  // Fonte da verdade do valor cobrado é a assinatura no banco (account.priceBRL),
+  // não o preço do catálogo: se um dia os planos subirem de preço, quem já
+  // assinou continua pagando o valor acertado.
+  const plan = getPlan(account.planId)
+  const price = account.priceBRL
 
   const set =
     (key: keyof CardForm, mask?: (v: string) => string) =>
@@ -117,7 +123,7 @@ export default function Pagamento() {
 
         <Reveal anim="up" delay={120}>
           <p className="lead flow__lead">
-            Nada é cobrado hoje. A primeira cobrança de {brl(PLAN.price)} acontece em{' '}
+            Nada é cobrado hoje. A primeira cobrança de {brl(price)} acontece em{' '}
             <strong>{formatDate(account.trialEndsAt)}</strong>, e você pode cancelar antes disso
             pelo painel, sem multa.
           </p>
@@ -234,9 +240,9 @@ export default function Pagamento() {
                     }
                     hint="A assinatura é mensal e renova automaticamente até o cancelamento."
                   >
-                    <option value="1">Mensal: {brl(PLAN.price)} por mês</option>
+                    <option value="1">Mensal: {brl(price)} por mês</option>
                     <option value="12">
-                      Anual: {brl(PLAN.price * 10)} à vista, o equivalente a 2 meses de desconto
+                      Anual: {brl(price * 10)} à vista, o equivalente a 2 meses de desconto
                     </option>
                   </SelectField>
                 </div>
@@ -247,7 +253,7 @@ export default function Pagamento() {
                   <div className="pix">
                     <PixPlaceholder />
                     <p style={{ margin: 0, maxWidth: '46ch' }}>
-                      No fim da avaliação você recebe por e-mail um Pix de {brl(PLAN.price)} com
+                      No fim da avaliação você recebe por e-mail um Pix de {brl(price)} com
                       vencimento em três dias. O acesso continua ativo enquanto o pagamento não
                       vence.
                     </p>
@@ -272,7 +278,7 @@ export default function Pagamento() {
                   <dl className="summary">
                     <div>
                       <dt>Valor</dt>
-                      <dd>{brl(PLAN.price)}</dd>
+                      <dd>{brl(price)}</dd>
                     </div>
                     <div>
                       <dt>Emissão</dt>
@@ -289,7 +295,7 @@ export default function Pagamento() {
               <dl className="summary">
                 <div>
                   <dt>Plano</dt>
-                  <dd>{PLAN.name}</dd>
+                  <dd>{plan.name}</dd>
                 </div>
                 <div>
                   <dt>Hoje você paga</dt>
@@ -298,7 +304,7 @@ export default function Pagamento() {
                 <div>
                   <dt>Primeira cobrança</dt>
                   <dd>
-                    {brl(PLAN.price)} em {formatDate(account.trialEndsAt)}
+                    {brl(price)} em {formatDate(account.trialEndsAt)}
                   </dd>
                 </div>
               </dl>

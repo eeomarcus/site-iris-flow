@@ -2,7 +2,7 @@ import { Reveal } from '@/components/effects/Reveal'
 import { AmbientBackground } from '@/components/effects/AmbientBackground'
 import { IrisMark } from '@/components/layout/Logo'
 import { Button } from '@/components/ui/Button'
-import { PLAN } from '@/data/content'
+import { TRIAL_DAYS } from '@/data/content'
 import './cta.css'
 
 export function CallToAction() {
@@ -32,7 +32,7 @@ export function CallToAction() {
         <Reveal anim="up" delay={340}>
           <div className="cta__actions">
             <Button to="/cadastro" size="lg" variant="teal">
-              Começar os {PLAN.trialDays} dias gratuitos
+              Começar os {TRIAL_DAYS} dias gratuitos
             </Button>
             <Button to="/contato" size="lg" variant="secondary">
               Falar com a equipe

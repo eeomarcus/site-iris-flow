@@ -5,7 +5,7 @@ import { ThemeToggle } from './ThemeToggle'
 import { Button } from '@/components/ui/Button'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
 import { useAccount } from '@/context/AccountContext'
-import { PLAN } from '@/data/content'
+import { TRIAL_DAYS } from '@/data/content'
 import './header.css'
 
 const NAV = [
@@ -118,7 +118,7 @@ export function Header() {
                 Entrar
               </Button>
               <Button to="/cadastro" full>
-                Testar grátis por {PLAN.trialDays} dias
+                Testar grátis por {TRIAL_DAYS} dias
               </Button>
             </>
           )}

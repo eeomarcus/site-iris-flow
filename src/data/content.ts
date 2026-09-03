@@ -61,7 +61,7 @@ export const PROBLEM = {
     },
     us: {
       label: 'A solução da IrisFlow',
-      price: 'R$ 250 por mês',
+      price: 'A partir de R$ 249 por mês',
       detail: 'Sem equipamento, sem fidelidade, com período de avaliação gratuito antes da primeira cobrança.',
     },
   },
@@ -180,14 +180,16 @@ export const PIPELINE = [
 /* ---------------- indicadores técnicos ---------------- */
 
 export const METRICS = [
-  { value: 0.9, decimals: 1, suffix: '°', label: 'erro angular na melhor sessão registrada' },
-  { value: 57, suffix: ' px', label: 'erro médio em pixels na mesma sessão' },
+  { value: 0.9, decimals: 1, suffix: '°', label: 'erro angular na melhor sessão interna registrada' },
+  { value: 57, suffix: ' px', label: 'erro em pixels na mesma sessão, em tela de 1920 × 1080' },
+  { value: 104, suffix: ' px', label: 'erro máximo por ponto no pior dos nove alvos de validação' },
+  { value: 97, suffix: '%', label: 'taxa de acerto em alvo de raio 150 px, equivalente aos da interface' },
   { value: 478, label: 'marcos faciais extraídos por quadro de vídeo' },
   { value: 333, label: 'testes automatizados verdes no repositório' },
 ]
 
 export const METRICS_CAVEAT =
-  'Números medidos com um único operador, membro da própria equipe, em um único equipamento doméstico, com a cabeça em posição estável. Ainda não houve teste com pacientes do público-alvo, e essa é a próxima tarefa do roteiro técnico. Publicamos as condições junto com o resultado, inclusive quando ele é desfavorável.'
+  'Medição em andamento. Todos os números acima foram registrados com um único operador, membro da própria equipe, em um único equipamento doméstico, com a cabeça em posição estável. Nenhum teste foi realizado até aqui com pacientes do público-alvo, e essa é a próxima tarefa do roteiro técnico. Erro em pixels depende do tamanho da tela e erro em graus depende da distância: por isso publicamos as condições ao lado do resultado, inclusive quando ele é desfavorável.'
 
 /* ---------------- diferenciais ---------------- */
 
@@ -254,7 +256,7 @@ export const A11Y_PRINCIPLES = [
 export const COMPARISON = {
   columns: ['IrisFlow', 'Eye tracker dedicado', 'App por piscada'],
   rows: [
-    { feature: 'Custo no primeiro ano', values: ['R$ 3.000 em assinatura', 'R$ 15.000 a R$ 80.000', 'Assinatura mais baixa'] },
+    { feature: 'Custo no primeiro ano', values: ['R$ 2.988 a R$ 7.788 em assinatura', 'R$ 15.000 a R$ 80.000', 'Assinatura mais baixa'] },
     { feature: 'Hardware proprietário', values: ['não', 'sim', 'não'] },
     { feature: 'Apontamento direto pelo olhar', values: ['sim', 'sim', 'não'] },
     { feature: 'Eventos por caractere', values: ['1', '1', '2'] },
@@ -268,51 +270,128 @@ export const COMPARISON = {
     'A IrisFlow não é a solução mais barata do mercado brasileiro de tecnologia assistiva. A afirmação correta é mais restrita: entre as soluções que oferecem apontamento direto pelo olhar, é a mais barata do país. A IrisFlow também ainda não tem estudo clínico publicado, atributo em que perde para as soluções internacionais. Essa distância só se fecha com execução.',
 }
 
-/* ---------------- plano de assinatura ---------------- */
+/* ---------------- planos de assinatura ---------------- */
 
-export const PLAN: {
+/**
+ * Trial compartilhado por todos os planos. O banco (tabela `plans`) tem
+ * `trial_days` por plano, mas hoje o site oferece o mesmo período para
+ * as três faixas. Mantido como constante para o header, hero e o
+ * componente de garantias exibirem o mesmo número.
+ */
+export const TRIAL_DAYS = 15
+
+export type PlanId = 'essencial' | 'completo' | 'voz'
+
+export type Plan = {
+  id: PlanId
   name: string
+  /** Valor em reais, sem centavos exibidos porque os três planos são inteiros. */
   price: number
   period: string
-  trialDays: number
-  summary: string
+  /** Frase curta que aparece no card, abaixo do nome do plano. */
+  tagline: string
+  /** Quantos dispositivos podem estar ativos ao mesmo tempo. */
+  devices: string
+  /** Modalidade de suporte incluída no plano. */
+  support: string
+  /** Bullets que descrevem o que o plano inclui. */
   includes: string[]
-  guarantees: { icon: IconName; title: string; text: string }[]
-} = {
-  name: 'Assinatura IrisFlow',
-  price: 250,
-  period: 'por mês',
-  trialDays: 15,
-  summary:
-    'Uma única assinatura, com todos os módulos incluídos. Sem fidelidade, sem taxa de adesão e sem compra de equipamento.',
-  includes: [
-    'Todos os módulos: comunicação, computador, lazer, cuidador e emergência',
-    'Instaladores para Windows, macOS e Linux',
-    'Calibração guiada e preparação automática do posto de uso',
-    'Teclado ocular otimizado para o português e banco de frases',
-    'Síntese de voz em português brasileiro',
-    'Funcionamento offline do núcleo de rastreamento',
-    'Atualizações contínuas enquanto a assinatura estiver ativa',
-    'Suporte por e-mail e canal direto com a equipe',
-  ],
-  guarantees: [
-    {
-      icon: 'relogio',
-      title: 'Avaliação gratuita',
-      text: 'Você testa antes de qualquer cobrança. Se o paciente não conseguir operar, não há pagamento.',
-    },
-    {
-      icon: 'cadeado-aberto',
-      title: 'Sem fidelidade',
-      text: 'Cancele quando quiser, direto no painel, sem multa e sem ligação de retenção.',
-    },
-    {
-      icon: 'notebook',
-      title: 'Sem hardware',
-      text: 'Roda na webcam do computador que a família já tem em casa.',
-    },
-  ],
+  /** Marca o plano recomendado — usado como destaque no card. */
+  recommended?: boolean
 }
+
+/**
+ * Fonte da verdade dos planos no frontend. O id casa com o campo `id`
+ * da tabela `public.plans` no Supabase, e é o que a página de cadastro
+ * envia para o RPC `complete_registration` para que a `subscriptions`
+ * fique com o plano certo. Alterar o preço aqui sem atualizar o banco
+ * quebra a coerência entre o que o site mostra e o que a `my_account`
+ * devolve.
+ */
+export const PLANS: Plan[] = [
+  {
+    id: 'essencial',
+    name: 'Essencial',
+    price: 249,
+    period: 'por mês',
+    tagline: 'A porta de entrada. Comunicação e controle do computador para um único usuário.',
+    devices: '1 dispositivo ativo',
+    support: 'Suporte por e-mail e tutoriais',
+    includes: [
+      'Comunicação por olhar, teclado em português e frases rápidas',
+      'Controle do cursor do sistema operacional',
+      'Painel do cuidador e acionamento de emergência',
+      'Instaladores para Windows, macOS e Linux',
+      'Calibração guiada e preparação automática do posto',
+      'Funcionamento offline do núcleo de rastreamento',
+    ],
+  },
+  {
+    id: 'completo',
+    name: 'Completo',
+    price: 399,
+    period: 'por mês',
+    tagline: 'O plano recomendado. Inclui os módulos com inteligência artificial e lazer terapêutico.',
+    devices: 'Até 3 dispositivos ativos',
+    support: 'Suporte prioritário por mensagem',
+    recommended: true,
+    includes: [
+      'Tudo do plano Essencial',
+      'Assistente de conversação com inteligência artificial',
+      'Módulo de lazer e bem-estar com jogos adaptados',
+      'Relatórios de sessão e histórico de uso',
+      'Sincronização de perfis entre dispositivos',
+      'Atualizações contínuas enquanto a assinatura estiver ativa',
+    ],
+  },
+  {
+    id: 'voz',
+    name: 'Voz',
+    price: 649,
+    period: 'por mês',
+    tagline: 'A voz do próprio paciente, reconstruída a partir de gravações anteriores à perda da fala.',
+    devices: 'Até 5 dispositivos ativos',
+    support: 'Suporte dedicado com resposta em até 4 h úteis',
+    includes: [
+      'Tudo do plano Completo',
+      'Clonagem da voz do próprio paciente',
+      'Perfis múltiplos por assinatura',
+      'Backup em nuvem dos perfis de calibração',
+      'Prioridade no acesso a novos módulos',
+      'Canal direto com a equipe técnica',
+    ],
+  },
+]
+
+/** Garantias comuns a todos os planos, exibidas ao lado da grade. */
+export const PLAN_GUARANTEES: { icon: IconName; title: string; text: string }[] = [
+  {
+    icon: 'relogio',
+    title: 'Avaliação gratuita',
+    text: 'Você testa antes de qualquer cobrança. Se o paciente não conseguir operar, não há pagamento.',
+  },
+  {
+    icon: 'cadeado-aberto',
+    title: 'Sem fidelidade',
+    text: 'Cancele quando quiser, direto no painel, sem multa e sem ligação de retenção.',
+  },
+  {
+    icon: 'notebook',
+    title: 'Sem hardware',
+    text: 'Roda na webcam do computador que a família já tem em casa.',
+  },
+]
+
+/** Busca um plano pelo id, com fallback silencioso no recomendado. */
+export function getPlan(id: string | null | undefined): Plan {
+  return PLANS.find((p) => p.id === id) ?? PLANS.find((p) => p.recommended) ?? PLANS[0]
+}
+
+/** Plano exibido como padrão em CTAs onde o usuário ainda não escolheu. */
+export const DEFAULT_PLAN: Plan = getPlan('completo')
+
+/** Menor preço da grade — usado em copy do tipo "a partir de R$ X". */
+export const CHEAPEST_PLAN: Plan = PLANS.reduce((a, b) => (a.price < b.price ? a : b))
 
 /* ---------------- perguntas frequentes ---------------- */
 

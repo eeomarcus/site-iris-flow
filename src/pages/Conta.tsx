@@ -9,7 +9,7 @@ import { SessionLoading } from '@/components/ui/Skeleton'
 import { useAccount } from '@/context/AccountContext'
 import { brl, daysUntil, formatDate } from '@/utils/format'
 import { useDownloads } from '@/hooks/useDownloads'
-import { PLAN } from '@/data/content'
+import { getPlan, TRIAL_DAYS } from '@/data/content'
 import './checkout.css'
 import './conta.css'
 
@@ -49,8 +49,9 @@ export default function Conta() {
   const remaining = daysUntil(account.trialEndsAt)
   const progress =
     account.status === 'avaliacao'
-      ? Math.min(1, (PLAN.trialDays - remaining) / PLAN.trialDays)
+      ? Math.min(1, (TRIAL_DAYS - remaining) / TRIAL_DAYS)
       : 1
+  const plan = getPlan(account.planId)
 
   return (
     <div className="flow">
@@ -92,7 +93,7 @@ export default function Conta() {
               <div className="conta__plan-head">
                 <div>
                   <span className={`tag ${status.tone}`}>{status.text}</span>
-                  <h2 className="conta__plan-name">{PLAN.name}</h2>
+                  <h2 className="conta__plan-name">Plano {plan.name}</h2>
                 </div>
                 <p className="conta__plan-price">
                   {brl(account.priceBRL)}

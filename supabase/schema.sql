@@ -113,9 +113,23 @@ create table if not exists public.plans (
 comment on table public.plans is
   'Planos de assinatura. price_brl está em reais, não em centavos.';
 
-insert into public.plans (id, name, price_brl, trial_days)
-values ('irisflow-mensal', 'Assinatura IrisFlow', 250.00, 15)
-on conflict (id) do nothing;
+-- Três planos B2C, contratados pela família no site. Os ids batem com o
+-- tipo PlanId em src/data/content.ts; alterar o preço aqui exige alterar
+-- lá também para o catálogo continuar coerente com o que o banco cobra.
+insert into public.plans (id, name, price_brl, trial_days) values
+  ('essencial', 'Essencial', 249.00, 15),
+  ('completo',  'Completo',  399.00, 15),
+  ('voz',       'Voz',       649.00, 15)
+on conflict (id) do update
+  set name       = excluded.name,
+      price_brl  = excluded.price_brl,
+      trial_days = excluded.trial_days,
+      active     = true;
+
+-- O plano único original ('irisflow-mensal') fica inativo, mas continua
+-- na tabela porque assinaturas antigas ainda o referenciam pela FK.
+update public.plans set active = false
+ where id = 'irisflow-mensal';
 
 
 -- ---------------------------------------------------------------------
@@ -398,7 +412,7 @@ create or replace function public.complete_registration(
   p_prescriber_name text    default null,
   p_prescriber_role text    default null,
   p_newsletter      boolean default false,
-  p_plan_id         text    default 'irisflow-mensal'
+  p_plan_id         text    default 'completo'
 )
 returns uuid
 language plpgsql
@@ -610,6 +624,7 @@ select
   b.prescriber_name,
   b.prescriber_role,
   s.status,
+  s.plan_id,
   s.price_brl,
   s.trial_ends_at,
   s.next_charge_at,

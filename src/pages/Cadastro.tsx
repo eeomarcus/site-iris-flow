@@ -1,5 +1,5 @@
-import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useMemo, useState, type FormEvent } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { AmbientBackground } from '@/components/effects/AmbientBackground'
 import { Reveal } from '@/components/effects/Reveal'
 import { Stepper } from '@/components/ui/Stepper'
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { useAccount, type Profile } from '@/context/AccountContext'
 import { isCPF, isEmail, isPhone, maskCPF, maskPhone } from '@/utils/format'
-import { PLAN } from '@/data/content'
+import { getPlan, TRIAL_DAYS } from '@/data/content'
 import './checkout.css'
 
 const STEPS = ['Quem paga', 'Quem usa', 'Confirmação']
@@ -45,6 +45,10 @@ export default function Cadastro() {
   const [falha, setFalha] = useState<string | null>(null)
   const { register } = useAccount()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  // O plano vem da URL (?plano=essencial|completo|voz). Se a URL não trouxer
+  // nada — quando o usuário chega direto no /cadastro — cai no recomendado.
+  const plan = useMemo(() => getPlan(params.get('plano')), [params])
 
   const set =
     (key: keyof Form, mask?: (v: string) => string) =>
@@ -114,7 +118,7 @@ export default function Cadastro() {
     void _confirm
 
     try {
-      await register(profile, password)
+      await register(profile, password, plan.id)
       navigate('/pagamento')
     } catch (e) {
       setFalha(e instanceof Error ? e.message : 'Não foi possível criar a conta.')
@@ -135,15 +139,15 @@ export default function Cadastro() {
 
         <Reveal anim="up">
           <h1 className="flow__title">
-            {PLAN.trialDays} dias para descobrir se a IrisFlow funciona para o seu caso.
+            {TRIAL_DAYS} dias para descobrir se a IrisFlow funciona para o seu caso.
           </h1>
         </Reveal>
 
         <Reveal anim="up" delay={120}>
           <p className="lead flow__lead">
-            Não pedimos cartão agora. A forma de pagamento só entra na etapa seguinte, e a
-            primeira cobrança acontece depois dos {PLAN.trialDays} dias, se vocês decidirem
-            continuar.
+            Plano escolhido: <strong>{plan.name}</strong>, R$ {plan.price} {plan.period}. Não
+            pedimos cartão agora. A forma de pagamento só entra na etapa seguinte, e a primeira
+            cobrança acontece depois dos {TRIAL_DAYS} dias, se vocês decidirem continuar.
           </p>
         </Reveal>
 
@@ -356,7 +360,7 @@ export default function Cadastro() {
                     <div>
                       <dt>Plano</dt>
                       <dd>
-                        {PLAN.name}: {PLAN.trialDays} dias grátis, depois R$ {PLAN.price} por mês
+                        {plan.name}: {TRIAL_DAYS} dias grátis, depois R$ {plan.price} {plan.period}
                       </dd>
                     </div>
                   </dl>
@@ -400,7 +404,7 @@ export default function Cadastro() {
                   </Button>
                 ) : (
                   <Button to="/planos" variant="ghost" icon={<Icon name="seta-esquerda" size={18} />}>
-                    Ver o plano
+                    Ver os planos
                   </Button>
                 )}
 

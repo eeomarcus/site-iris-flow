@@ -1,7 +1,7 @@
 import { Reveal } from '@/components/effects/Reveal'
 import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
-import { PLAN } from '@/data/content'
+import { PLANS, PLAN_GUARANTEES, TRIAL_DAYS } from '@/data/content'
 import './pricing.css'
 
 export function Pricing({ compact = false }: { compact?: boolean }) {
@@ -9,96 +9,103 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
     <section className={`section pricing${compact ? ' pricing--compact' : ''}`} id="planos">
       <div className="container">
         <Reveal anim="fade">
-          <span className="eyebrow">Plano</span>
+          <span className="eyebrow">Planos</span>
         </Reveal>
 
         <Reveal anim="up">
           <h2 className="pricing__title">
-            Uma assinatura. <span className="gradient-text">Tudo incluído.</span>
+            Três planos. <span className="gradient-text">Sem hardware, sem fidelidade.</span>
           </h2>
         </Reveal>
 
         <Reveal anim="up" delay={120}>
-          <p className="lead pricing__lead">{PLAN.summary}</p>
+          <p className="lead pricing__lead">
+            Uma família escolhe o plano pela intensidade do suporte, pelo número de dispositivos
+            ativos e pelo acesso aos módulos que consomem inteligência artificial. Todos começam
+            com {TRIAL_DAYS} dias de avaliação gratuita, antes de qualquer cobrança.
+          </p>
         </Reveal>
 
-        <div className="pricing__layout">
-          <Reveal anim="zoom" delay={180}>
-            <div className="plan panel">
-              <span className="plan__ribbon">{PLAN.trialDays} dias grátis</span>
+        <div className="plans">
+          {PLANS.map((plan, i) => (
+            <Reveal key={plan.id} anim="zoom" delay={180 + i * 110}>
+              <article className={`plan panel${plan.recommended ? ' plan--recommended' : ''}`}>
+                {plan.recommended && (
+                  <span className="plan__ribbon">Recomendado</span>
+                )}
 
-              <header className="plan__head">
-                <h3 className="plan__name">{PLAN.name}</h3>
-                <p className="plan__price">
-                  <span className="plan__currency">R$</span>
-                  <span className="plan__amount">{PLAN.price}</span>
-                  <span className="plan__period">{PLAN.period}</span>
+                <header className="plan__head">
+                  <h3 className="plan__name">{plan.name}</h3>
+                  <p className="plan__tagline">{plan.tagline}</p>
+                  <p className="plan__price">
+                    <span className="plan__currency">R$</span>
+                    <span className="plan__amount">{plan.price}</span>
+                    <span className="plan__period">{plan.period}</span>
+                  </p>
+                  <p className="plan__meta">
+                    <span>{plan.devices}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{plan.support}</span>
+                  </p>
+                </header>
+
+                <ul className="plan__list">
+                  {plan.includes.map((item, j) => (
+                    <li key={item} style={{ animationDelay: `${j * 60}ms` }}>
+                      <span className="plan__check" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path
+                            d="M4 12.5 9.5 18 20 6.5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <Button to={`/cadastro?plano=${plan.id}`} size="lg" full>
+                  {plan.recommended ? `Assinar ${plan.name}` : `Escolher ${plan.name}`}
+                </Button>
+                <p className="plan__fine">
+                  {TRIAL_DAYS} dias grátis. Sem cartão para começar.
                 </p>
-                <p className="plan__sub">
-                  Sem taxa de adesão, sem fidelidade e sem compra de equipamento. A primeira
-                  cobrança só acontece depois dos {PLAN.trialDays} dias de avaliação.
-                </p>
-              </header>
+              </article>
+            </Reveal>
+          ))}
+        </div>
 
-              <ul className="plan__list">
-                {PLAN.includes.map((item, i) => (
-                  <li key={item} style={{ animationDelay: `${i * 60}ms` }}>
-                    <span className="plan__check" aria-hidden="true">
-                      <svg viewBox="0 0 24 24">
-                        <path
-                          d="M4 12.5 9.5 18 20 6.5"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="3"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <Button to="/cadastro" size="lg" full>
-                Começar avaliação gratuita
-              </Button>
-              <p className="plan__fine">
-                Não pedimos cartão para começar. Você só informa a forma de pagamento se decidir
-                continuar.
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="pricing__aside">
-            {PLAN.guarantees.map((g, i) => (
-              <Reveal key={g.title} anim="left" delay={240 + i * 110}>
-                <div className="guarantee">
-                  <span className="guarantee__icon">
-                    <Icon name={g.icon} size={24} />
-                  </span>
-                  <div>
-                    <h3>{g.title}</h3>
-                    <p>{g.text}</p>
-                  </div>
+        <div className="pricing__guarantees">
+          {PLAN_GUARANTEES.map((g, i) => (
+            <Reveal key={g.title} anim="up" delay={520 + i * 100}>
+              <div className="guarantee">
+                <span className="guarantee__icon">
+                  <Icon name={g.icon} size={24} />
+                </span>
+                <div>
+                  <h3>{g.title}</h3>
+                  <p>{g.text}</p>
                 </div>
-              </Reveal>
-            ))}
-
-            <Reveal anim="left" delay={580}>
-              <div className="guarantee guarantee--note">
-                <p>
-                  Para clínicas, associações de pacientes e profissionais prescritores, o acesso
-                  durante o programa de validação é gratuito.{' '}
-                  <a href="/contato#validacao" className="underline-grow">
-                    Fale com a equipe
-                  </a>
-                  .
-                </p>
               </div>
             </Reveal>
-          </div>
+          ))}
         </div>
+
+        <Reveal anim="fade" delay={860}>
+          <p className="pricing__note">
+            Para clínicas, associações de pacientes e profissionais prescritores, o acesso durante
+            o programa de validação é gratuito.{' '}
+            <a href="/contato#validacao" className="underline-grow">
+              Fale com a equipe
+            </a>
+            .
+          </p>
+        </Reveal>
       </div>
     </section>
   )

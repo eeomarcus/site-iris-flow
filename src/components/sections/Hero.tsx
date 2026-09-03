@@ -4,7 +4,7 @@ import { Logo } from '@/components/layout/Logo'
 import { Typewriter } from '@/components/effects/Typewriter'
 import { Reveal } from '@/components/effects/Reveal'
 import { Button } from '@/components/ui/Button'
-import { HERO_PHRASES, PLAN } from '@/data/content'
+import { HERO_PHRASES, TRIAL_DAYS, CHEAPEST_PLAN } from '@/data/content'
 import './hero.css'
 
 export function Hero() {
@@ -61,7 +61,7 @@ export function Hero() {
         <Reveal anim="up" delay={920}>
           <div className="hero__actions">
             <Button to="/cadastro" size="lg">
-              Testar grátis por {PLAN.trialDays} dias
+              Testar grátis por {TRIAL_DAYS} dias
             </Button>
             <Button to="/como-funciona" variant="secondary" size="lg">
               Ver como funciona
@@ -71,9 +71,10 @@ export function Hero() {
 
         <Reveal anim="fade" delay={1040}>
           <p className="hero__fine">
-            Sem cartão para começar · Sem fidelidade · R$ {PLAN.price} por mês depois da avaliação ·{' '}
+            Sem cartão para começar · Sem fidelidade · a partir de R$ {CHEAPEST_PLAN.price} por mês
+            depois da avaliação ·{' '}
             <Link to="/planos" className="underline-grow">
-              ver o plano
+              ver os três planos
             </Link>
           </p>
         </Reveal>

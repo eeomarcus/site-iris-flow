@@ -9,7 +9,7 @@ import { Icon, type IconName } from '@/components/ui/Icon'
 import { useAccount } from '@/context/AccountContext'
 import { brl, daysUntil, formatDate } from '@/utils/format'
 import { useDownloads } from '@/hooks/useDownloads'
-import { PLAN } from '@/data/content'
+import { TRIAL_DAYS } from '@/data/content'
 import './checkout.css'
 import './sucesso.css'
 
@@ -74,7 +74,7 @@ export default function Sucesso() {
 
           <Reveal anim="up" delay={300}>
             <p className="lead success__lead">
-              A avaliação de {PLAN.trialDays} dias começou. Até{' '}
+              A avaliação de {TRIAL_DAYS} dias começou. Até{' '}
               <strong>{formatDate(account.trialEndsAt)}</strong> vocês têm acesso completo à
               plataforma, sem nenhuma cobrança.
             </p>
@@ -101,7 +101,7 @@ export default function Sucesso() {
               <div>
                 <dt>Primeira cobrança</dt>
                 <dd>
-                  {brl(PLAN.price)} em {formatDate(account.nextChargeAt)}
+                  {brl(account.priceBRL)} em {formatDate(account.nextChargeAt)}
                   {account.payment?.cardLast4
                     ? ` · ${account.payment.cardBrand} final ${account.payment.cardLast4}`
                     : account.payment

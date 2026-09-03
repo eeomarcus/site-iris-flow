@@ -1,7 +1,6 @@
 import { PageHead } from '@/components/layout/PageHead'
 import { Pipeline } from '@/components/sections/Pipeline'
 import { DwellDemo } from '@/components/sections/DwellDemo'
-import { Metrics } from '@/components/sections/Metrics'
 import { CallToAction } from '@/components/sections/CallToAction'
 import { Reveal } from '@/components/effects/Reveal'
 import { Card, CardIcon } from '@/components/ui/Card'
@@ -144,7 +143,6 @@ export default function ComoFunciona() {
         </div>
       </section>
 
-      <Metrics />
       <CallToAction />
     </>
   )

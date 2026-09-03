@@ -1,7 +1,6 @@
 import { PageHead } from '@/components/layout/PageHead'
 import { Modules } from '@/components/sections/Modules'
 import { Differentiators } from '@/components/sections/Differentiators'
-import { Metrics } from '@/components/sections/Metrics'
 import { Comparison } from '@/components/sections/Comparison'
 import { CallToAction } from '@/components/sections/CallToAction'
 import { Reveal } from '@/components/effects/Reveal'
@@ -87,7 +86,6 @@ export default function Solucao() {
       </section>
 
       <Modules />
-      <Metrics />
       <Differentiators />
       <Comparison />
 

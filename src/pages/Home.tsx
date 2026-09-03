@@ -2,7 +2,6 @@ import { Hero } from '@/components/sections/Hero'
 import { ProblemSection } from '@/components/sections/ProblemSection'
 import { DwellDemo } from '@/components/sections/DwellDemo'
 import { Modules } from '@/components/sections/Modules'
-import { Metrics } from '@/components/sections/Metrics'
 import { Differentiators } from '@/components/sections/Differentiators'
 import { Comparison } from '@/components/sections/Comparison'
 import { Pricing } from '@/components/sections/Pricing'
@@ -19,7 +18,6 @@ export default function Home() {
       <ProblemSection />
       <DwellDemo />
       <Modules limit={6} />
-      <Metrics />
       <Differentiators />
       <Comparison />
       <Pricing />

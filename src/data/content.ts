@@ -177,20 +177,6 @@ export const PIPELINE = [
   },
 ]
 
-/* ---------------- indicadores técnicos ---------------- */
-
-export const METRICS = [
-  { value: 0.9, decimals: 1, suffix: '°', label: 'erro angular na melhor sessão interna registrada' },
-  { value: 57, suffix: ' px', label: 'erro em pixels na mesma sessão, em tela de 1920 × 1080' },
-  { value: 104, suffix: ' px', label: 'erro máximo por ponto no pior dos nove alvos de validação' },
-  { value: 97, suffix: '%', label: 'taxa de acerto em alvo de raio 150 px, equivalente aos da interface' },
-  { value: 478, label: 'marcos faciais extraídos por quadro de vídeo' },
-  { value: 333, label: 'testes automatizados verdes no repositório' },
-]
-
-export const METRICS_CAVEAT =
-  'Medição em andamento. Todos os números acima foram registrados com um único operador, membro da própria equipe, em um único equipamento doméstico, com a cabeça em posição estável. Nenhum teste foi realizado até aqui com pacientes do público-alvo, e essa é a próxima tarefa do roteiro técnico. Erro em pixels depende do tamanho da tela e erro em graus depende da distância: por isso publicamos as condições ao lado do resultado, inclusive quando ele é desfavorável.'
-
 /* ---------------- diferenciais ---------------- */
 
 export const DIFFERENTIATORS: { icon: IconName; title: string; text: string }[] = [

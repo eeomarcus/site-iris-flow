@@ -93,16 +93,6 @@
   letter-spacing: 0;
 }
 
-.demo__caret {
-  display: inline-block;
-  width: 3px;
-  height: 1.05em;
-  margin-left: 4px;
-  vertical-align: -0.14em;
-  background: var(--ok);
-  animation: caret-blink 1s steps(1) infinite;
-}
-
 .demo__speak {
   flex: none;
   padding: 0.7rem 1.4rem;
@@ -133,16 +123,16 @@
   animation: pulse-dot 1.4s var(--ease-out) infinite;
 }
 
-/* --- teclado --- */
-.demo__keys {
+/* --- prancha de pictogramas ---
+   Poucos alvos, grandes e bem espaçados: é o terceiro princípio de
+   acessibilidade do produto. Em 24 px o desenho some, por isso o glifo
+   é generoso. Cinco colunas por duas linhas: mais que isso e o alvo
+   fica estreito, menos e ele vira uma faixa larga com um desenho
+   perdido no meio. */
+.demo__board {
   display: grid;
-  gap: var(--sp-2);
-}
-
-.demo__row {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: var(--sp-2);
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--sp-3);
 }
 
 .demo__key {
@@ -151,15 +141,15 @@
   isolation: isolate;
   display: grid;
   place-items: center;
-  min-height: 62px;
-  padding: var(--sp-2);
+  min-height: 126px;
+  padding: var(--sp-4) var(--sp-2);
   border-radius: var(--r-md);
   border: 2px solid var(--line-strong);
   background: var(--surface);
   box-shadow: var(--shadow-sm);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 1.24rem;
+  font-size: 1.05rem;
   font-weight: 650;
   cursor: pointer;
   transition:
@@ -184,6 +174,30 @@
 .demo__key-label {
   position: relative;
   z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-2);
+}
+
+.demo__glyph {
+  display: block;
+  color: var(--accent);
+  transition: color var(--dur) var(--ease-out);
+}
+
+/* Durante a seleção o preenchimento entra por baixo: desenho e palavra
+   passam a branco juntos, senão o glifo some no gradiente. */
+.demo__key.is-active .demo__glyph {
+  color: #fff;
+}
+
+.demo__word {
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
+}
+
+.demo__word--quick {
+  font-size: 0.98rem;
 }
 
 .demo__key-fill {
@@ -201,13 +215,9 @@
   transform: scaleX(1);
 }
 
-.demo__key--wide {
-  grid-column: span 5;
-}
-
 .demo__key--quick {
-  min-height: 56px;
-  font-size: 1rem;
+  min-height: 58px;
+  padding: var(--sp-2);
 }
 
 .demo__quick {
@@ -276,13 +286,24 @@
   border-left: 2px solid var(--line);
 }
 
+@media (max-width: 1000px) {
+  .demo__board {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 640px) {
   .demo__screen {
     flex-direction: column;
     align-items: stretch;
   }
+  .demo__board {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .demo__key {
+    min-height: 106px;
+  }
+  .demo__key--quick {
     min-height: 54px;
-    font-size: 1.1rem;
   }
 }

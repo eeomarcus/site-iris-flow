@@ -1,22 +1,141 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { AnimatedHeadline } from '@/components/effects/AnimatedHeadline'
 import { Reveal } from '@/components/effects/Reveal'
 import './dwell-demo.css'
 
-/** Ordem por frequência das letras do português, como no teclado do produto. */
-const ROWS = [
-  ['A', 'E', 'O', 'S', 'R', 'I'],
-  ['N', 'D', 'M', 'U', 'T', 'C'],
-  ['L', 'P', 'V', 'G', 'H', 'Q'],
-  ['B', 'F', 'Z', 'J', 'X', 'K'],
+/* ------------------------------------------------------------------
+   Pictogramas da prancha de comunicação.
+
+   Os glifos são desenhados aqui, e não no conjunto Icon, porque são
+   vocabulário de comunicação e não iconografia de interface: mudam
+   com o repertório do usuário, não com o design system. O traço
+   segue o mesmo padrão do Icon (viewBox 24, contorno de 1.6).
+   ------------------------------------------------------------------ */
+
+type Pictogram = {
+  /** Palavra que aparece embaixo do desenho, como na prancha real. */
+  word: string
+  /** Frase completa vocalizada — uma fixação produz a frase inteira. */
+  phrase: string
+  glyph: ReactNode
+}
+
+const PICTOGRAMS: Pictogram[] = [
+  {
+    word: 'sede',
+    phrase: 'Estou com sede.',
+    glyph: (
+      <>
+        <path d="M6 4h12l-1.3 15.3A2 2 0 0 1 14.7 21H9.3a2 2 0 0 1-2-1.7Z" />
+        <path d="M6.7 10.5h10.6" />
+      </>
+    ),
+  },
+  {
+    word: 'fome',
+    phrase: 'Estou com fome.',
+    glyph: (
+      <>
+        <path d="M5 3v6a2.5 2.5 0 0 0 5 0V3" />
+        <path d="M7.5 11v10" />
+        <path d="M18 3c-1.6 0-2.8 2.2-2.8 5s1.2 4 2.8 4" />
+        <path d="M18 3v18" />
+      </>
+    ),
+  },
+  {
+    word: 'dor',
+    phrase: 'Estou sentindo dor.',
+    glyph: (
+      <>
+        <path d="M13 2.5 5 13.5h6l-1 8 8-11.5h-6z" />
+      </>
+    ),
+  },
+  {
+    word: 'frio',
+    phrase: 'Estou com frio.',
+    glyph: (
+      <>
+        <path d="M12 2.5v19M4 7l16 10M20 7 4 17" />
+        <path d="M9.5 4.5 12 6.8l2.5-2.3M9.5 19.5 12 17.2l2.5 2.3" />
+      </>
+    ),
+  },
+  {
+    word: 'calor',
+    phrase: 'Estou com calor.',
+    glyph: (
+      <>
+        <circle cx="12" cy="12" r="4.2" />
+        <path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22" />
+        <path d="m5 5 1.7 1.7M17.3 17.3 19 19M19 5l-1.7 1.7M6.7 17.3 5 19" />
+      </>
+    ),
+  },
+  {
+    word: 'posição',
+    phrase: 'Quero mudar de posição.',
+    glyph: (
+      <>
+        <path d="M2.5 19v-7.5h12a4.5 4.5 0 0 1 4.5 4.5V19" />
+        <path d="M2.5 19h19" />
+        <circle cx="6.8" cy="8" r="2.3" />
+      </>
+    ),
+  },
+  {
+    word: 'banheiro',
+    phrase: 'Preciso ir ao banheiro.',
+    glyph: (
+      <>
+        <rect x="5" y="2.5" width="14" height="19" rx="2" />
+        <path d="M15 12h.01" />
+      </>
+    ),
+  },
+  {
+    word: 'chamar',
+    phrase: 'Chama alguém para mim, por favor.',
+    glyph: (
+      <>
+        <circle cx="8.5" cy="7.5" r="3.2" />
+        <path d="M3 20a5.5 5.5 0 0 1 11 0" />
+        <path d="M17.5 8.5a4.2 4.2 0 0 1 0 7" />
+        <path d="M20.2 5.8a8 8 0 0 1 0 12.4" />
+      </>
+    ),
+  },
+  {
+    word: 'televisão',
+    phrase: 'Quero assistir televisão.',
+    glyph: (
+      <>
+        <rect x="2.5" y="6.5" width="19" height="13" rx="2" />
+        <path d="M8 2.5 12 6.5l4-4" />
+      </>
+    ),
+  },
+  {
+    word: 'estou bem',
+    phrase: 'Hoje eu estou bem.',
+    glyph: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M8.4 14.2a4.4 4.4 0 0 0 7.2 0" />
+        <path d="M9 9.4h.01M15 9.4h.01" />
+      </>
+    ),
+  },
 ]
 
-const QUICK = ['Sim', 'Não', 'Obrigado', 'Estou com dor']
+/** Respostas de uma fixação só, as mais pedidas pelo cuidador. */
+const QUICK = ['Sim', 'Não', 'Obrigado', 'Espera um pouco']
 
 const DWELL_OPTIONS = [800, 1500, 2500] as const
 
 export function DwellDemo() {
-  const [text, setText] = useState('')
+  const [phrase, setPhrase] = useState('')
   const [dwellMs, setDwellMs] = useState<number>(1500)
   const [holding, setHolding] = useState<string | null>(null)
   const [locked, setLocked] = useState(false)
@@ -33,24 +152,21 @@ export function DwellDemo() {
   )
 
   const commit = (value: string) => {
-    setText((prev) => {
-      if (value === '␣') return prev + ' '
-      if (value === '⌫') return prev.slice(0, -1)
-      if (value.length > 1) return value
-      return prev + value
-    })
+    // Diferente do teclado, aqui cada alvo entrega uma frase pronta:
+    // a seleção substitui o que estava no campo, não acrescenta.
+    setPhrase(value)
     setSpoken(false)
     // período refratário de 800 ms, igual ao do produto
     setLocked(true)
     cool.current = window.setTimeout(() => setLocked(false), 800)
   }
 
-  const begin = (key: string) => {
+  const begin = (id: string, value: string) => {
     if (locked) return
-    setHolding(key)
+    setHolding(id)
     timer.current = window.setTimeout(() => {
       setHolding(null)
-      commit(key)
+      commit(value)
     }, dwellMs)
   }
 
@@ -63,8 +179,8 @@ export function DwellDemo() {
     setSpoken(true)
     // Síntese de voz do próprio navegador. No produto é uma voz
     // em português brasileiro embarcada, que funciona offline.
-    if ('speechSynthesis' in window && text.trim()) {
-      const u = new SpeechSynthesisUtterance(text)
+    if ('speechSynthesis' in window && phrase.trim()) {
+      const u = new SpeechSynthesisUtterance(phrase)
       u.lang = 'pt-BR'
       u.rate = 0.95
       window.speechSynthesis.speak(u)
@@ -72,14 +188,14 @@ export function DwellDemo() {
     window.setTimeout(() => setSpoken(false), 2200)
   }
 
-  const keyProps = (key: string) => ({
-    onMouseEnter: () => begin(key),
+  const targetProps = (id: string, value: string) => ({
+    onMouseEnter: () => begin(id, value),
     onMouseLeave: cancel,
-    onFocus: () => begin(key),
+    onFocus: () => begin(id, value),
     onBlur: cancel,
     onClick: () => {
       cancel()
-      commit(key)
+      commit(value)
     },
   })
 
@@ -91,24 +207,26 @@ export function DwellDemo() {
         </Reveal>
 
         <AnimatedHeadline
-          text="Assim é escrever com o olhar."
+          text="Uma fixação do olhar, uma frase inteira."
           as="h2"
-          highlight={['olhar.']}
+          highlight={['frase', 'inteira.']}
           className="demo__title"
         />
 
         <Reveal anim="up" delay={140}>
           <p className="lead demo__lead">
-            Na IrisFlow, o gatilho é o olhar estimado pela webcam. Aqui, para você experimentar sem
-            instalar nada, o gatilho é o cursor ou a tecla Tab. O resto é idêntico: contorno de
-            destaque ao entrar no alvo, mudança de cor durante a seleção, aro de progresso até a
-            confirmação e um período refratário de 800 ms para impedir o disparo duplo.
+            Escrever letra a letra custa caro para quem se move só com os olhos. Por isso a prancha
+            de pictogramas existe: um alvo, uma frase pronta, dita em voz alta. Na IrisFlow o
+            gatilho é o olhar estimado pela webcam; aqui, para você experimentar sem instalar nada,
+            é o cursor ou a tecla Tab. O resto é idêntico: contorno de destaque ao entrar no alvo,
+            mudança de cor durante a seleção, preenchimento até a confirmação e um período
+            refratário de 800 ms para impedir o disparo duplo.
           </p>
         </Reveal>
 
         <Reveal anim="zoom" delay={220}>
           <div className="demo__frame panel">
-            {/* barra de estado, como na tela real de calibração */}
+            {/* barra de estado, como na tela real de comunicação */}
             <div className="demo__status">
               <span className="demo__chip demo__chip--ok">câmera ativa</span>
               <span className="demo__chip demo__chip--ok">rastreamento estável</span>
@@ -117,54 +235,68 @@ export function DwellDemo() {
               <span className="demo__chip demo__chip--sos">emergência</span>
             </div>
 
-            {/* campo de texto composto */}
+            {/* frase composta */}
             <div className="demo__screen">
               <p className="demo__output" aria-live="polite">
-                {text || <span className="demo__placeholder">passe o cursor sobre uma tecla…</span>}
-                <span className="demo__caret" aria-hidden="true" />
+                {phrase || (
+                  <span className="demo__placeholder">
+                    passe o cursor sobre um pictograma e segure…
+                  </span>
+                )}
               </p>
               <button
                 type="button"
                 className={`demo__speak${spoken ? ' is-speaking' : ''}`}
                 onClick={speak}
-                disabled={!text.trim()}
+                disabled={!phrase.trim()}
               >
                 {spoken ? 'falando…' : 'falar'}
               </button>
             </div>
 
-            {/* teclado ordenado por frequência */}
-            <div className="demo__keys" role="group" aria-label="Teclado ocular de demonstração">
-              {ROWS.map((row, ri) => (
-                <div className="demo__row" key={ri}>
-                  {row.map((key) => (
-                    <DemoKey
-                      key={key}
-                      label={key}
-                      active={holding === key}
-                      dwellMs={dwellMs}
-                      {...keyProps(key)}
-                    />
-                  ))}
-                </div>
+            {/* prancha de pictogramas */}
+            <div className="demo__board" role="group" aria-label="Prancha de pictogramas">
+              {PICTOGRAMS.map((p) => (
+                <DemoTarget
+                  key={p.word}
+                  active={holding === p.word}
+                  dwellMs={dwellMs}
+                  ariaLabel={p.phrase}
+                  {...targetProps(p.word, p.phrase)}
+                >
+                  <svg
+                    className="demo__glyph"
+                    viewBox="0 0 24 24"
+                    width="34"
+                    height="34"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.6}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    {p.glyph}
+                  </svg>
+                  <span className="demo__word">{p.word}</span>
+                </DemoTarget>
               ))}
-              <div className="demo__row">
-                <DemoKey label="␣" wide active={holding === '␣'} dwellMs={dwellMs} {...keyProps('␣')} />
-                <DemoKey label="⌫" active={holding === '⌫'} dwellMs={dwellMs} {...keyProps('⌫')} />
-              </div>
             </div>
 
             {/* frases rápidas */}
             <div className="demo__quick" role="group" aria-label="Frases rápidas">
-              {QUICK.map((phrase) => (
-                <DemoKey
-                  key={phrase}
-                  label={phrase}
+              {QUICK.map((q) => (
+                <DemoTarget
+                  key={q}
                   quick
-                  active={holding === phrase}
+                  active={holding === q}
                   dwellMs={dwellMs}
-                  {...keyProps(phrase)}
-                />
+                  ariaLabel={q}
+                  {...targetProps(q, q)}
+                >
+                  <span className="demo__word demo__word--quick">{q}</span>
+                </DemoTarget>
               ))}
             </div>
 
@@ -182,7 +314,11 @@ export function DwellDemo() {
                   {ms} ms
                 </button>
               ))}
-              <button type="button" className="demo__opt demo__opt--clear" onClick={() => setText('')}>
+              <button
+                type="button"
+                className="demo__opt demo__opt--clear"
+                onClick={() => setPhrase('')}
+              >
                 limpar
               </button>
             </div>
@@ -191,9 +327,11 @@ export function DwellDemo() {
 
         <Reveal anim="fade" delay={320}>
           <p className="demo__note">
-            O teclado real segue a frequência das letras do português (A, E, O, S, R, I, N, D, M,
-            U, T, C, L), porque isso encurta a distância que o olho percorre entre teclas
-            consecutivas. Os layouts alfabético e QWERTY continuam disponíveis nas configurações.
+            A prancha não substitui o teclado: ela resolve o que se repete todo dia, e o teclado
+            ordenado pela frequência das letras do português continua ali para o que não cabe em
+            um pictograma. No produto, a fixação já vocaliza a frase sozinha — aqui o botão existe
+            porque ninguém gosta de um site que começa a falar sem avisar. O repertório de
+            pictogramas é editado pelo cuidador, com as palavras que aquela casa usa.
           </p>
         </Reveal>
       </div>
@@ -201,11 +339,11 @@ export function DwellDemo() {
   )
 }
 
-type KeyProps = {
-  label: string
+type TargetProps = {
+  children: ReactNode
   active: boolean
   dwellMs: number
-  wide?: boolean
+  ariaLabel: string
   quick?: boolean
   onMouseEnter: () => void
   onMouseLeave: () => void
@@ -214,21 +352,17 @@ type KeyProps = {
   onClick: () => void
 }
 
-function DemoKey({ label, active, dwellMs, wide, quick, ...handlers }: KeyProps) {
+function DemoTarget({ children, active, dwellMs, ariaLabel, quick, ...handlers }: TargetProps) {
   return (
     <button
       type="button"
-      className={[
-        'demo__key',
-        active ? 'is-active' : '',
-        wide ? 'demo__key--wide' : '',
-        quick ? 'demo__key--quick' : '',
-      ]
+      aria-label={ariaLabel}
+      className={['demo__key', active ? 'is-active' : '', quick ? 'demo__key--quick' : '']
         .filter(Boolean)
         .join(' ')}
       {...handlers}
     >
-      <span className="demo__key-label">{label}</span>
+      <span className="demo__key-label">{children}</span>
       <span
         className="demo__key-fill"
         style={{ transitionDuration: active ? `${dwellMs}ms` : '180ms' }}

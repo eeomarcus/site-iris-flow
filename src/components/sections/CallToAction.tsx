@@ -23,9 +23,9 @@ export function CallToAction() {
 
         <Reveal anim="up" delay={240}>
           <p className="cta__lead">
-            Instale no computador que vocês já têm, calibre em menos de trinta segundos e veja se
-            funciona para o seu caso. Sem cartão, sem compromisso e sem risco financeiro na
-            tentativa.
+            Instale no computador que já está em casa, calibre em menos de trinta segundos e veja
+            com os próprios olhos se funciona para o seu caso. Não pedimos cartão para começar, e
+            nenhum texto de site substitui essa verificação.
           </p>
         </Reveal>
 

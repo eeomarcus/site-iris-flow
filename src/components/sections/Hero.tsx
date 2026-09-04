@@ -43,9 +43,10 @@ export function Hero() {
 
         <Reveal anim="up" delay={700}>
           <p className="lead hero__lead">
-            A IrisFlow transforma o movimento dos olhos em comunicação e em controle do computador
-            usando apenas a webcam que a pessoa já tem em casa. Sem equipamento de dezenas de
-            milhares de reais. Sem enviar uma única imagem para a internet.
+            Quando alguém perde a fala, a família não sai atrás de tecnologia. Sai atrás de um
+            jeito de continuar conversando. A IrisFlow transforma o movimento dos olhos em palavra
+            e em controle do computador, usando a webcam que já está em casa — sem equipamento de
+            dezenas de milhares de reais e sem enviar uma única imagem para a internet.
           </p>
         </Reveal>
 

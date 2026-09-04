@@ -13,11 +13,20 @@ const PRIVACIDADE: Block[] = [
     ],
   },
   {
-    h: 'Quais dados a IrisFlow coleta',
+    h: 'Quais dados a IrisFlow trata',
     p: [
-      'Dados de contratação informados no cadastro: nome, e-mail, telefone e documento do responsável, além do primeiro nome e do perfil de uso da pessoa que vai operar a solução.',
-      'Dados de suporte que o próprio usuário enviar ao descrever um problema.',
-      'Dados de sessão técnica, quando o usuário autorizar expressamente o envio: vetores de características e alvos, sem qualquer imagem, usados para reproduzir a sessão e avaliar mudanças de algoritmo.',
+      'Dados de conta e de contratação: nome, e-mail, telefone, documento e informação de pagamento do responsável que assina, além do primeiro nome e do perfil de uso da pessoa que vai operar a solução.',
+      'Dados de suporte que o próprio usuário ou o cuidador enviar ao descrever um problema. Como esses relatos frequentemente descrevem a condição de saúde, são tratados como dado pessoal sensível.',
+      'Dados técnicos do dispositivo e da sessão, como identificador de instalação, sistema operacional e telemetria de uso.',
+      'Amostras de voz fornecidas pela família para a clonagem de voz. São dado biométrico, e por isso são apagadas após a geração do modelo, salvo pedido expresso em contrário.',
+      'Dados de calibração eventualmente compartilhados para melhoria do modelo, que só existem mediante consentimento explícito e revogável: vetores de características e alvos, sem qualquer imagem.',
+    ],
+  },
+  {
+    h: 'Consentimento quando o titular não consegue assiná-lo',
+    p: [
+      'Em muitos casos o titular dos dados é uma pessoa que não consegue assinar, digitar nem falar, e o consentimento é prestado por um responsável. Isso não se resolve com um botão de aceite na tela.',
+      'A IrisFlow registra quem consentiu, em nome de quem e quando, verifica a legitimidade de quem presta o consentimento e mantém mecanismo de revogação que produz exclusão efetiva e confirmada.',
     ],
   },
   {
@@ -26,6 +35,14 @@ const PRIVACIDADE: Block[] = [
       'Não vende, aluga nem compartilha dados pessoais com terceiros para fins publicitários.',
       'Não armazena imagens de rosto, de olho ou de ambiente em servidor.',
       'Não condiciona o funcionamento do núcleo de rastreamento, do teclado ou das frases rápidas à conexão com a internet.',
+      'Não permite que a voz clonada reproduza texto arbitrário. Ela só vocaliza conteúdo produzido pelo próprio usuário dentro do fluxo de comunicação do sistema, e essa restrição é implementada no programa, não apenas prometida em contrato.',
+    ],
+  },
+  {
+    h: 'Verificação por terceiro',
+    p: [
+      'Antes do lançamento comercial, a aplicação passa por verificação externa de tráfego de rede, com o resultado publicado. A promessa de que nenhuma imagem sai do dispositivo precisa ser comprovada por quem não trabalha aqui.',
+      'Permanecem públicos a documentação técnica, o protocolo de medição de acurácia e os relatórios de precisão com as condições em que foram obtidos. O núcleo de calibração é proprietário desde a virada para a fase comercial.',
     ],
   },
   {
@@ -38,7 +55,7 @@ const PRIVACIDADE: Block[] = [
   {
     h: 'Contato do encarregado',
     p: [
-      `Pedidos relacionados a dados pessoais devem ser enviados para ${BRAND.email}, com resposta em até quinze dias.`,
+      `O encarregado pelo tratamento de dados pessoais é a Diretoria de Marketing e Financeiro. Pedidos relacionados a dados pessoais devem ser enviados para ${BRAND.email}, com resposta em até quinze dias.`,
     ],
   },
 ]
@@ -61,8 +78,9 @@ const TERMOS: Block[] = [
     h: 'Limites declarados do produto',
     p: [
       'A IrisFlow entrega controle pleno dentro das próprias telas e controle do cursor do sistema operacional em nível funcional. Interfaces de terceiros com alvos pequenos, menus densos ou elementos que exigem arraste preciso permanecem fora do alcance confortável do rastreamento por webcam.',
-      'Os indicadores de precisão divulgados foram obtidos com um único operador, em equipamento doméstico, com a cabeça em posição estável, e ainda não foram replicados com pacientes do público-alvo. O desempenho real varia com a câmera, a iluminação, a distância e o quadro clínico.',
-      'A IrisFlow é um recurso de comunicação e de autonomia. Não é dispositivo médico, não substitui avaliação clínica e não deve ser o único meio disponível para pedido de socorro em situação de risco à vida.',
+      'As medições de precisão realizadas até aqui envolveram um único operador da equipe, em equipamento doméstico, com a cabeça em posição estável, e ainda não foram replicadas com pacientes do público-alvo. O desempenho real varia com a câmera, a iluminação, a distância e o quadro clínico.',
+      'A IrisFlow é um recurso de comunicação e de autonomia, sem finalidade de diagnóstico, de monitoramento de condição clínica ou de decisão terapêutica. A leitura preliminar da equipe é que o produto fica fora do escopo da RDC 657/2022 da Anvisa, e a confirmação formal desse enquadramento junto à agência é tarefa do primeiro ano de operação.',
+      'A IrisFlow não substitui avaliação clínica e não deve ser o único meio disponível para pedido de socorro em situação de risco à vida.',
     ],
   },
   {
@@ -77,7 +95,7 @@ const TERMOS: Block[] = [
     h: 'Suporte e evolução',
     p: [
       'Enquanto a assinatura estiver ativa, o assinante recebe atualizações contínuas e suporte pelo canal de e-mail informado no site.',
-      'As funcionalidades listadas neste site como em realização (assistente de conversação e clonagem de voz) são previsões de roteiro e não constituem obrigação contratual de prazo.',
+      'As funcionalidades listadas neste site como em realização (assistente de conversação e clonagem de voz) são previsões de roteiro e não constituem obrigação contratual de prazo. O plano Voz só entra em comercialização quando o módulo de clonagem de voz for entregue.',
     ],
   },
   {

@@ -13,9 +13,13 @@ export const BRAND = {
   tagline: 'Seu olhar tem voz.',
   claim: 'Comunicação e controle do computador pelo olhar, com a webcam que você já tem.',
   email: 'irisflowteam@gmail.com',
-  instagram: 'https://instagram.com/irisflow',
-  linkedin: 'https://linkedin.com/company/irisflow',
+  instagram: 'https://www.instagram.com/irisflow.ia',
+  linkedin: 'https://www.linkedin.com/company/irisflowia/',
   repo: 'https://github.com/ZambePy/Blink',
+  /** Rótulo do repositório: desde a virada comercial, o que fica aberto é a
+      documentação, o protocolo de medição e os componentes de interface —
+      não o núcleo de calibração. Ver CODE_POSITION. */
+  repoLabel: 'documentação técnica e protocolo de medição',
 }
 
 /** Frases que a máquina de escrever compõe no hero. */
@@ -27,11 +31,30 @@ export const HERO_PHRASES = [
   'Chama a enfermeira, por favor.',
 ]
 
+/* ---------------- quem espera do outro lado ----------------
+   Vem do tópico 1.2 do plano ("Por que a empresa existe além do
+   resultado financeiro"). É a parte que nenhuma tabela cobre.
+   ---------------------------------------------------------------- */
+
+export const HUMAN = {
+  title: 'Perder a fala não acontece com uma pessoa só.',
+  lines: [
+    'O cônjuge que passa o dia adivinhando o que o outro quer.',
+    'O filho que soletra o alfabeto em voz alta e espera um piscar de confirmação.',
+    'O profissional que não consegue avaliar a dor porque o paciente não tem como descrevê-la.',
+  ],
+  report:
+    'Uma das respondentes da nossa pesquisa é médica e filha de uma paciente. Ela contou que a mãe havia perdido a fala na semana anterior e que estava muito abalada com a dificuldade de se comunicar. Não é um caso raro. É a semana em que essa família estava vivendo quando respondeu o formulário.',
+  source: 'Pesquisa de mercado IrisFlow, 2026',
+  close:
+    'A IrisFlow precisa se pagar para continuar existindo, e levamos essa parte a sério. Mas não é ela a razão de existir. A razão é uma família voltar a conversar.',
+}
+
 /* ---------------- o problema ---------------- */
 
 export const PROBLEM = {
   title: 'A tecnologia existe há vinte anos. O preço é que não deixa ela chegar.',
-  lead: 'Pessoas com ELA, tetraplegia alta, paralisia cerebral severa, sequela grave de AVC ou distrofia muscular avançada perdem a fala e o movimento, mas seguem conscientes, lúcidas e com o controle dos olhos preservado.',
+  lead: 'Pessoas com ELA, tetraplegia alta, paralisia cerebral severa, sequela grave de AVC ou distrofia muscular avançada perdem a fala e o movimento. Continuam lúcidas, com opiniões, vontades, medos e afetos, e com o controle dos olhos preservado. A tecnologia que transforma esse movimento em palavra existe há mais de vinte anos. Ela só não chega até em casa.',
   stats: [
     {
       value: 60.5,
@@ -62,7 +85,7 @@ export const PROBLEM = {
     us: {
       label: 'A solução da IrisFlow',
       price: 'A partir de R$ 249 por mês',
-      detail: 'Sem equipamento, sem fidelidade, com período de avaliação gratuito antes da primeira cobrança.',
+      detail: 'Sem equipamento, sem fidelidade e com avaliação gratuita antes da primeira cobrança. A família só paga se o paciente conseguir operar.',
     },
   },
 }
@@ -188,7 +211,7 @@ export const DIFFERENTIATORS: { icon: IconName; title: string; text: string }[] 
   {
     icon: 'inclinacao',
     title: 'Compensação geométrica de pose',
-    text: 'A correção da inclinação da cabeça é aplicada na saída, sem coeficiente ajustável, correta por construção mesmo fora da faixa vista na calibração. Colocar a pose como característica de entrada piorava o erro em 8,6%. Foi medido e descartado.',
+    text: 'A correção da inclinação da cabeça é aplicada na saída, sem coeficiente ajustável, correta por construção mesmo fora da faixa vista na calibração. Colocar a pose como característica de entrada piorava o resultado, então foi medido e descartado, mesmo já estando pronto.',
   },
   {
     icon: 'webcam',
@@ -203,12 +226,12 @@ export const DIFFERENTIATORS: { icon: IconName; title: string; text: string }[] 
   {
     icon: 'offline',
     title: 'Funciona sem internet',
-    text: 'Núcleo de rastreamento, teclado e frases rápidas operam offline. Foi o atributo apontado como essencial por 57,9% dos respondentes da pesquisa, à frente até da síntese de voz.',
+    text: 'Núcleo de rastreamento, teclado e frases rápidas operam offline. Foi apontado como essencial por 57,9% dos respondentes da pesquisa, à frente até da síntese de voz — em casas do interior, com conexão instável, depender da internet seria fragilidade.',
   },
   {
     icon: 'cadeado',
     title: 'Privacidade por desenho',
-    text: 'Quadros da câmera, posição bruta da íris e coeficientes do modelo de calibração permanecem no dispositivo. Nenhuma imagem e nenhum vetor de calibração trafega pela rede.',
+    text: 'Quadros da câmera, posição bruta da íris e coeficientes do modelo de calibração permanecem no dispositivo. Nenhuma imagem e nenhum vetor de calibração trafega pela rede. Antes do lançamento comercial, o tráfego de rede da aplicação passa por verificação externa e o resultado é publicado: a promessa fica comprovada por terceiro, e não apenas declarada por nós.',
   },
 ]
 
@@ -240,20 +263,20 @@ export const A11Y_PRINCIPLES = [
 /* ---------------- comparativo ---------------- */
 
 export const COMPARISON = {
-  columns: ['IrisFlow', 'Eye tracker dedicado', 'App por piscada'],
+  columns: ['IrisFlow', 'Eye tracker dedicado', 'Comunicador nacional por assinatura'],
   rows: [
-    { feature: 'Custo no primeiro ano', values: ['R$ 2.988 a R$ 7.788 em assinatura', 'R$ 15.000 a R$ 80.000', 'Assinatura mais baixa'] },
-    { feature: 'Hardware proprietário', values: ['não', 'sim', 'não'] },
+    { feature: 'Custo no primeiro ano', values: ['R$ 2.988 a R$ 7.788 em assinatura', 'R$ 15.000 a R$ 80.000', 'R$ 708 a R$ 1.490'] },
+    { feature: 'Compra de equipamento', values: ['não', 'sim', 'parcial'] },
     { feature: 'Apontamento direto pelo olhar', values: ['sim', 'sim', 'não'] },
-    { feature: 'Eventos por caractere', values: ['1', '1', '2'] },
-    { feature: 'Teclado adaptado ao português', values: ['sim', 'não', 'não'] },
+    { feature: 'Teclado ordenado pela frequência do português', values: ['sim', 'não', 'não'] },
     { feature: 'Controle do sistema operacional', values: ['sim', 'sim', 'não'] },
     { feature: 'Painel do cuidador e emergência', values: ['sim', 'parcial', 'não'] },
     { feature: 'Funciona offline', values: ['sim', 'sim', 'parcial'] },
     { feature: 'Validação clínica publicada', values: ['não', 'sim', 'parcial'] },
+    { feature: 'Adoção institucional consolidada', values: ['não', 'sim', 'sim'] },
   ],
   honesty:
-    'A IrisFlow não é a solução mais barata do mercado brasileiro de tecnologia assistiva. A afirmação correta é mais restrita: entre as soluções que oferecem apontamento direto pelo olhar, é a mais barata do país. A IrisFlow também ainda não tem estudo clínico publicado, atributo em que perde para as soluções internacionais. Essa distância só se fecha com execução.',
+    'Duas coisas precisam ser ditas aqui, e nenhuma delas ajuda a vender. A primeira: a IrisFlow não é a solução mais barata do mercado brasileiro de tecnologia assistiva. Existem comunicadores nacionais por assinatura que custam menos, com distribuição consolidada e adoção por grandes centros de reabilitação. A afirmação correta é mais estreita e continua valendo: entre as soluções que apontam direto pelo olhar, categoria em que as alternativas pedem de R$ 6.000 a R$ 80.000 no primeiro ano, a IrisFlow é a mais barata do país, com uma redução de custo de acesso superior a 90%. A segunda: a IrisFlow ainda não tem estudo clínico publicado, e nisso perde para quem tem décadas de vantagem. Essa distância não se fecha com texto de site. Fecha com execução, e o programa de validação de noventa dias é o começo dela.',
 }
 
 /* ---------------- planos de assinatura ---------------- */
@@ -284,6 +307,9 @@ export type Plan = {
   includes: string[]
   /** Marca o plano recomendado — usado como destaque no card. */
   recommended?: boolean
+  /** Ressalva exibida no rodapé do card quando o plano depende de um
+      módulo ainda em realização. */
+  note?: string
 }
 
 /**
@@ -300,7 +326,7 @@ export const PLANS: Plan[] = [
     name: 'Essencial',
     price: 249,
     period: 'por mês',
-    tagline: 'A porta de entrada. Comunicação e controle do computador para um único usuário.',
+    tagline: 'Comunicação e controle do computador, para quem precisa do essencial pelo menor preço.',
     devices: '1 dispositivo ativo',
     support: 'Suporte por e-mail e tutoriais',
     includes: [
@@ -317,7 +343,7 @@ export const PLANS: Plan[] = [
     name: 'Completo',
     price: 399,
     period: 'por mês',
-    tagline: 'O plano recomendado. Inclui os módulos com inteligência artificial e lazer terapêutico.',
+    tagline: 'O plano recomendado. Reduz o esforço de escrever letra a letra e acrescenta o lazer terapêutico.',
     devices: 'Até 3 dispositivos ativos',
     support: 'Suporte prioritário por mensagem',
     recommended: true,
@@ -325,8 +351,8 @@ export const PLANS: Plan[] = [
       'Tudo do plano Essencial',
       'Assistente de conversação com inteligência artificial',
       'Módulo de lazer e bem-estar com jogos adaptados',
-      'Relatórios de sessão e histórico de uso',
-      'Sincronização de perfis entre dispositivos',
+      'Relatórios de sessão e histórico de uso para a família',
+      'Uma sessão de calibração assistida no primeiro mês',
       'Atualizações contínuas enquanto a assinatura estiver ativa',
     ],
   },
@@ -336,14 +362,15 @@ export const PLANS: Plan[] = [
     price: 649,
     period: 'por mês',
     tagline: 'A voz do próprio paciente, reconstruída a partir de gravações anteriores à perda da fala.',
+    note: 'A clonagem de voz ainda está em construção. O plano Voz só entra em comercialização quando esse módulo for entregue — até lá, indicamos o Completo.',
     devices: 'Até 5 dispositivos ativos',
     support: 'Suporte dedicado com resposta em até 4 h úteis',
     includes: [
       'Tudo do plano Completo',
       'Clonagem da voz do próprio paciente',
-      'Perfis múltiplos por assinatura',
-      'Backup em nuvem dos perfis de calibração',
-      'Prioridade no acesso a novos módulos',
+      'Perfis múltiplos no mesmo dispositivo',
+      'Backup em nuvem das frases, pictogramas e configurações',
+      'Onboarding assistido, com sessão de configuração acompanhada',
       'Canal direto com a equipe técnica',
     ],
   },
@@ -353,18 +380,18 @@ export const PLANS: Plan[] = [
 export const PLAN_GUARANTEES: { icon: IconName; title: string; text: string }[] = [
   {
     icon: 'relogio',
-    title: 'Avaliação gratuita',
-    text: 'Você testa antes de qualquer cobrança. Se o paciente não conseguir operar, não há pagamento.',
+    title: 'Testa antes de pagar',
+    text: 'A avaliação é gratuita e não pede cartão. Se a pessoa não conseguir operar o sistema, não há cobrança nenhuma.',
   },
   {
     icon: 'cadeado-aberto',
-    title: 'Sem fidelidade',
-    text: 'Cancele quando quiser, direto no painel, sem multa e sem ligação de retenção.',
+    title: 'Sai quando quiser',
+    text: 'Cancelamento pelo próprio painel, a qualquer momento, sem multa e sem ligação de retenção.',
   },
   {
     icon: 'notebook',
-    title: 'Sem hardware',
-    text: 'Roda na webcam do computador que a família já tem em casa.',
+    title: 'Nada para comprar',
+    text: 'Roda na webcam do computador que já está em casa. Não existe equipamento a adquirir, nem taxa de adesão.',
   },
 ]
 
@@ -411,6 +438,22 @@ export const FAQ = [
     a: 'Ainda não. O produto mínimo viável está construído e funcionando, com protocolo de medição reproduzível, mas os testes de precisão foram feitos com um único operador da equipe. O teste com pacientes do público-alvo é a próxima tarefa do roteiro técnico, seguido de um programa de validação de noventa dias com parceiros clínicos.',
   },
   {
+    q: 'E se a família não tiver como pagar?',
+    a: 'Fale com a gente antes de desistir. A IrisFlow mantém o programa IrisFlow Doa, pelo qual licenças são cedidas gratuitamente a pacientes indicados por associações parceiras. A solução existe por causa de uma barreira de preço, e seria incoerente deixar essa barreira de pé no nosso próprio caixa.',
+  },
+  {
+    q: 'Quem instala e ensina a usar?',
+    a: 'Nós. A principal causa de abandono de tecnologia assistiva não é falha do produto: é falta de apoio na adoção. Um software que funciona mas que a família não consegue instalar, calibrar ou ajustar acaba na gaveta. Por isso o primeiro uso guiado, o tutorial dentro do produto, o material em linguagem simples e o suporte em português fazem parte da assinatura, e não de um serviço à parte.',
+  },
+  {
+    q: 'O código da IrisFlow é aberto?',
+    a: 'Em parte, e a posição mudou. Durante a fase acadêmica o repositório inteiro era público. Agora o núcleo de calibração é proprietário, porque é a única barreira técnica real que uma empresa pequena tem. Continuam abertos a documentação técnica, o protocolo de medição de acurácia, os relatórios de precisão com as condições em que foram obtidos e os componentes de interface acessível. Além disso, o tráfego de rede da aplicação passa por verificação externa antes do lançamento, com resultado publicado.',
+  },
+  {
+    q: 'A IrisFlow é um dispositivo médico?',
+    a: 'Não. É um recurso de comunicação e de autonomia, sem finalidade de diagnóstico, de monitoramento clínico ou de decisão terapêutica, e a leitura preliminar da equipe é que fica fora do escopo da RDC 657/2022 da Anvisa. A confirmação formal desse enquadramento é uma tarefa do primeiro ano. A IrisFlow não substitui avaliação clínica e não deve ser o único meio de pedido de socorro em situação de risco à vida.',
+  },
+  {
     q: 'Como funciona o cancelamento?',
     a: 'Pelo painel da conta, a qualquer momento, sem multa. Não há equipamento adquirido que prenda o cliente. A retenção depende da utilidade percebida mês a mês.',
   },
@@ -445,6 +488,82 @@ export const VALUES = [
   },
 ]
 
+/* ---------------- quem faz ----------------
+   Três sócios fundadores, com as atribuições do tópico 6.3 do plano.
+   ------------------------------------------------------- */
+
+export const TEAM = [
+  {
+    name: 'Gabriel Almeida Santos Zambe',
+    role: 'Product Owner e desenvolvimento back-end',
+    text: 'Definiu e construiu o núcleo de visão computacional desde a primeira linha: calibração, regressão, filtragem e a suíte de testes automatizados. Decide o que entra no produto e em que ordem.',
+  },
+  {
+    name: 'Marcus Vinicius Duarte',
+    role: 'CTO e desenvolvimento front-end',
+    text: 'Responde pela arquitetura da interface e pelos componentes de seleção por fixação. Em um produto assim, a usabilidade não é acabamento: é o que decide se a pessoa consegue ou não se comunicar.',
+  },
+  {
+    name: 'Giulia Calioni',
+    role: 'Diretoria de Marketing e Financeiro',
+    text: 'Conduziu a modelagem financeira e a pesquisa de mercado com os 38 respondentes. Cuida do posicionamento, do relacionamento com associações e profissionais de saúde e da gestão do caixa.',
+  },
+]
+
+/* ---------------- compromissos assumidos ----------------
+   Tópico 3.1 do plano (ESG e Agenda 2030). Cada item aqui tem
+   contrapartida concreta: nada entra só como declaração.
+   ------------------------------------------------------- */
+
+export const COMMITMENTS: { icon: IconName; title: string; text: string }[] = [
+  {
+    icon: 'pessoas',
+    title: 'IrisFlow Doa',
+    text: 'Licenças cedidas gratuitamente a pacientes indicados por associações parceiras. Quem não pode pagar não fica de fora do produto que existe justamente por causa do preço.',
+  },
+  {
+    icon: 'lazer',
+    title: 'Dia de impacto',
+    text: 'Jornada remunerada para a equipe atuar junto às associações. É benefício e também método: aproximar quem escreve o código de quem usa o software é a forma mais rápida de descobrir o que está errado.',
+  },
+  {
+    icon: 'notebook',
+    title: 'Menos descarte, não mais',
+    text: 'Não produzimos, embalamos, transportamos nem descartamos hardware. Rodar no computador que a família já tem prolonga a vida útil de um equipamento em vez de exigir outro.',
+  },
+  {
+    icon: 'cadeado',
+    title: 'O que o processamento local não resolve',
+    text: 'Processar tudo no dispositivo reduz o risco na origem, mas não elimina as obrigações da LGPD. Continuamos tratando dados de conta, de suporte e de voz, e a política de privacidade diz exatamente quais e por quanto tempo.',
+  },
+]
+
+/** Objetivos de Desenvolvimento Sustentável a que a operação se conecta. */
+export const SDGS = [
+  { n: 3, title: 'Saúde e bem-estar', text: 'Restabelecer a comunicação permite que a pessoa relate dor e desconforto, informação clínica hoje frequentemente inacessível.' },
+  { n: 9, title: 'Indústria e inovação', text: 'Tecnologia assistiva desenvolvida no Brasil, em um segmento historicamente dependente de importação.' },
+  { n: 10, title: 'Redução das desigualdades', text: 'O que hoje depende de dezenas de milhares de reais passa a caber no orçamento de uma família de renda média.' },
+  { n: 17, title: 'Parcerias', text: 'Associações de pacientes, profissionais de saúde e instituições de ensino ampliam o alcance além do que o mercado sozinho alcançaria.' },
+]
+
+/* ---------------- posição sobre o código ----------------
+   Mudou na virada para a fase comercial: núcleo fechado,
+   periferia aberta. Ver tópico 1.3 do plano.
+   ------------------------------------------------------- */
+
+export const CODE_POSITION = {
+  title: 'O que é nosso e o que fica aberto.',
+  lead: 'Durante a fase acadêmica o repositório inteiro era público. Na virada comercial essa posição mudou, e é melhor dizer isso do que deixar a página antiga no ar.',
+  closed: {
+    title: 'Fechado',
+    text: 'O extrator de características do olho, o modelo de calibração individual, a detecção de pontos contaminados e a compensação geométrica de pose. É a única barreira técnica real que temos, num mercado em que detecção de rosto e redes de estimação de olhar estão disponíveis para qualquer concorrente.',
+  },
+  open: {
+    title: 'Aberto',
+    text: 'A documentação técnica, o protocolo de medição de acurácia, os relatórios de precisão com as condições em que foram obtidos e os componentes de interface acessível. O que precisa ser auditado em tecnologia assistiva é o que o software faz com a imagem capturada — e isso continua verificável.',
+  },
+}
+
 export const ROADMAP = [
   {
     when: 'Concluído',
@@ -464,17 +583,17 @@ export const ROADMAP = [
   {
     when: 'Em realização',
     title: 'Assistente, voz e site de compra',
-    text: 'Composição assistida de frases, clonagem da voz do próprio paciente e o ambiente web de contratação, que é este site.',
+    text: 'Composição assistida de frases, clonagem da voz do próprio paciente e o ambiente web de contratação, que é este site. Enquanto esses três não ficam prontos, o que a IrisFlow tem para vender é o plano Essencial.',
   },
   {
     when: 'Próxima tarefa',
     title: 'Teste com o público-alvo',
-    text: 'Precisão e usabilidade com dois pacientes com restrição motora severa, comparados ao baseline atual.',
+    text: 'Precisão e usabilidade com dois pacientes com restrição motora severa. Até aqui, todas as sessões foram conduzidas por um integrante da própria equipe: a segunda pessoa a calibrar é o dado mais valioso que o projeto pode receber agora.',
   },
   {
     when: 'Pendente',
     title: 'Programa de validação de 90 dias',
-    text: 'Com parceiros clínicos, medição de acurácia em uso continuado e documentação de casos.',
+    text: 'Com parceiros clínicos, medição de acurácia em uso continuado, ciclos quinzenais de ajuste e documentação de casos. As famílias dessa primeira safra ficam com condição diferenciada permanente.',
   },
 ]
 
@@ -487,5 +606,5 @@ export const MARQUEE_ITEMS = [
   'funciona offline',
   'painel do cuidador',
   'emergência sempre acessível',
-  'código auditável',
+  'protocolo de medição aberto',
 ]

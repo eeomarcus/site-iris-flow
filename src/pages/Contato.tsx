@@ -55,7 +55,7 @@ export default function Contato() {
         eyebrow="Contato"
         title="Fale com quem construiu a IrisFlow."
         highlight={['construiu']}
-        lead="A equipe é pequena e responde direto, sem intermediário. Famílias, profissionais de saúde, clínicas e associações têm canal aberto."
+        lead="Somos três pessoas e respondemos nós mesmos, sem intermediário e sem robô de atendimento. Se você é familiar, cuidador, profissional de saúde, clínica ou associação, escreva: normalmente respondemos em até dois dias úteis."
       />
 
       <section className="section">
@@ -193,15 +193,23 @@ export default function Contato() {
                   </CardIcon>
                   <h3 id="validacao">Programa de validação</h3>
                   <p>
-                    Clínicas de reabilitação neurológica, associações de pacientes e profissionais
-                    prescritores recebem acesso gratuito durante todo o período de validação,
-                    treinamento da equipe, canal direto com os fundadores e influência real sobre
-                    as prioridades do produto.
+                    São noventa dias. Clínicas de reabilitação neurológica, associações de
+                    pacientes e profissionais prescritores recebem licenças gratuitas durante todo
+                    o período, instalação e calibração acompanhadas, treinamento da equipe, canal
+                    direto com os fundadores e ciclos quinzenais de ajuste do produto a partir do
+                    que for relatado.
                   </p>
                   <p>
                     Em contrapartida, pedimos acesso a pacientes reais mediante consentimento,
                     observação clínica qualificada, retorno estruturado e autorização para
-                    documentar o caso de forma anonimizada.
+                    documentar o caso de forma anonimizada. É uma troca declarada, e está por
+                    escrito justamente para que nenhuma das partes ache que está fazendo favor à
+                    outra.
+                  </p>
+                  <p>
+                    O paciente pode interromper a participação a qualquer momento, sem justificar.
+                    Ao fim dos noventa dias a família decide livremente pela assinatura, e as
+                    famílias dessa primeira safra ficam com condição diferenciada permanente.
                   </p>
                 </Card>
               </Reveal>

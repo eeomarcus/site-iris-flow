@@ -237,3 +237,25 @@
     min-height: 0;
   }
 }
+
+/* Ressalva de disponibilidade: aparece só no plano que depende de um
+   módulo ainda em construção. Fica antes do botão, de propósito. */
+.plan__note {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: flex-start;
+  margin: 0 0 var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--warn-line);
+  border-radius: var(--r-md);
+  background: var(--warn-soft);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.plan__note svg {
+  flex: none;
+  color: var(--warn);
+  margin-top: 2px;
+}

@@ -1,5 +1,6 @@
 import { Hero } from '@/components/sections/Hero'
 import { ProblemSection } from '@/components/sections/ProblemSection'
+import { Human } from '@/components/sections/Human'
 import { DwellDemo } from '@/components/sections/DwellDemo'
 import { Modules } from '@/components/sections/Modules'
 import { Differentiators } from '@/components/sections/Differentiators'
@@ -16,6 +17,7 @@ export default function Home() {
       <Hero />
       <Marquee items={MARQUEE_ITEMS} />
       <ProblemSection />
+      <Human />
       <DwellDemo />
       <Modules limit={6} />
       <Differentiators />

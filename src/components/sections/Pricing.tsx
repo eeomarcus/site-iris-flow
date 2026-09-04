@@ -20,9 +20,9 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
 
         <Reveal anim="up" delay={120}>
           <p className="lead pricing__lead">
-            Uma família escolhe o plano pela intensidade do suporte, pelo número de dispositivos
-            ativos e pelo acesso aos módulos que consomem inteligência artificial. Todos começam
-            com {TRIAL_DAYS} dias de avaliação gratuita, antes de qualquer cobrança.
+            Escolha pelo que a pessoa precisa hoje, não pelo que ela talvez venha a precisar. Dá
+            para mudar de plano depois, e os {TRIAL_DAYS} dias de avaliação valem para os três,
+            antes de qualquer cobrança e sem cartão.
           </p>
         </Reveal>
 
@@ -69,6 +69,13 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
                   ))}
                 </ul>
 
+                {plan.note && (
+                  <p className="plan__note">
+                    <Icon name="info" size={18} aria-hidden="true" />
+                    <span>{plan.note}</span>
+                  </p>
+                )}
+
                 <Button to={`/cadastro?plano=${plan.id}`} size="lg" full>
                   {plan.recommended ? `Assinar ${plan.name}` : `Escolher ${plan.name}`}
                 </Button>
@@ -99,7 +106,8 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
         <Reveal anim="fade" delay={860}>
           <p className="pricing__note">
             Para clínicas, associações de pacientes e profissionais prescritores, o acesso durante
-            o programa de validação é gratuito.{' '}
+            o programa de validação é gratuito. E se a mensalidade não couber no orçamento da
+            família, existe o programa IrisFlow Doa: pergunte antes de desistir.{' '}
             <a href="/contato#validacao" className="underline-grow">
               Fale com a equipe
             </a>

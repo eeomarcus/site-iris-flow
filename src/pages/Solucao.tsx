@@ -5,7 +5,7 @@ import { Comparison } from '@/components/sections/Comparison'
 import { CallToAction } from '@/components/sections/CallToAction'
 import { Reveal } from '@/components/effects/Reveal'
 import { Card, CardIcon } from '@/components/ui/Card'
-import { Icon } from '@/components/ui/Icon'
+import { Icon, type IconName } from '@/components/ui/Icon'
 import { Button } from '@/components/ui/Button'
 import { useDownloads } from '@/hooks/useDownloads'
 
@@ -29,6 +29,29 @@ const LIMITS = [
       'Taxa de acionamento acidental medida em uso contínuo real, que só o programa de validação vai responder',
       'Estudo clínico publicado, atributo em que as soluções internacionais têm décadas de vantagem',
     ],
+  },
+]
+
+const ADOPTION: { icon: IconName; title: string; text: string }[] = [
+  {
+    icon: 'webcam',
+    title: 'Primeiro uso guiado',
+    text: 'A família é conduzida passo a passo pela posição da câmera, pela iluminação do ambiente e pela calibração inicial, antes de qualquer tentativa de uso real.',
+  },
+  {
+    icon: 'monitor',
+    title: 'Tutorial dentro do produto',
+    text: 'A explicação fica onde a dúvida aparece, na própria tela, e não em um manual que ninguém abre depois da instalação.',
+  },
+  {
+    icon: 'documento',
+    title: 'Orientação em linguagem simples',
+    text: 'Material escrito para quem vai cuidar, não para quem vai programar. Sem jargão de engenharia e sem depender de tradução.',
+  },
+  {
+    icon: 'email',
+    title: 'Suporte em português, com gente',
+    text: 'O canal de suporte é atendido pela própria equipe. Em um produto usado por horas por dia, sem assistência técnica presente, isso não é acessório.',
   },
 ]
 
@@ -86,6 +109,45 @@ export default function Solucao() {
       </section>
 
       <Modules />
+
+      {/* A entrega não termina no instalador: a principal causa de abandono
+          de tecnologia assistiva é falta de apoio na adoção, não falha do
+          produto. Isso precisa aparecer antes dos diferenciais técnicos. */}
+      <section className="section">
+        <div className="container">
+          <Reveal anim="fade">
+            <span className="eyebrow">O que vai junto</span>
+          </Reveal>
+          <Reveal anim="up">
+            <h2 style={{ maxWidth: '26ch', marginBottom: 'var(--sp-4)' }}>
+              A entrega não é o arquivo de instalação.
+            </h2>
+          </Reveal>
+          <Reveal anim="up" delay={120}>
+            <p className="lead" style={{ maxWidth: '70ch', marginBottom: 'var(--sp-6)' }}>
+              A principal causa de abandono de tecnologia assistiva não é falha do produto: é falta
+              de apoio na hora de adotar. Um software que funciona mas que a família não consegue
+              instalar, calibrar ou ajustar termina na gaveta. Por isso o acompanhamento do
+              primeiro uso faz parte da assinatura, e não de um serviço à parte.
+            </p>
+          </Reveal>
+
+          <div className="grid grid--2">
+            {ADOPTION.map((item, i) => (
+              <Reveal key={item.title} anim="up" delay={i * 90}>
+                <Card as="div">
+                  <CardIcon tone={i % 2 === 0 ? 'teal' : 'blue'}>
+                    <Icon name={item.icon} size={26} />
+                  </CardIcon>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <Differentiators />
       <Comparison />
 

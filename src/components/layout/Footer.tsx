@@ -39,7 +39,8 @@ export function Footer() {
           <p className="footer__tagline">{BRAND.tagline}</p>
           <p className="footer__note">
             Tecnologia assistiva que transforma o movimento dos olhos em comunicação e em
-            controle do computador, usando a webcam que a pessoa já tem em casa.
+            controle do computador, usando a webcam que já está em casa. Feita por três pessoas,
+            no Brasil, para famílias brasileiras.
           </p>
           <div className="footer__social">
             <a href={BRAND.instagram} target="_blank" rel="noreferrer noopener">
@@ -71,9 +72,9 @@ export function Footer() {
       <div className="container footer__bottom">
         <p>© {new Date().getFullYear()} IrisFlow. Todos os direitos reservados.</p>
         <p className="footer__disclaimer">
-          Produto de tecnologia assistiva em estágio de validação. Os indicadores de precisão
-          divulgados foram medidos com um único operador em ambiente controlado e ainda não foram
-          replicados com pacientes do público-alvo.
+          Produto de tecnologia assistiva em estágio de validação. As medições de precisão feitas
+          até aqui envolveram um único operador da equipe, em ambiente controlado, e ainda não
+          foram replicadas com pacientes do público-alvo.
         </p>
       </div>
     </footer>
